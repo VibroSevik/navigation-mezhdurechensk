@@ -45,6 +45,10 @@ class Event
     #[Groups(['event:read'])]
     private ?string $name = null;
 
+    #[ORM\Column(length: 255)]
+    #[Groups(['event:read'])]
+    private ?string $shortDescription = null;
+
     #[Vich\UploadableField(mapping: 'event_images', fileNameProperty: 'image')]
     #[Assert\Image(mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'])]
     private ?File $imageFile = null;
@@ -78,6 +82,18 @@ class Event
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(string $shortDescription): static
+    {
+        $this->shortDescription = $shortDescription;
 
         return $this;
     }
