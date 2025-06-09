@@ -8,6 +8,8 @@ use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\UpdatedAtTrait;
 use App\Repository\EventRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -56,6 +58,17 @@ class Event
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:read'])]
     private ?string $image = null;
+
+    /**
+     * @var Collection<int, EventData>
+     */
+    #[ORM\OneToMany(targetEntity: EventData::class, mappedBy: 'event', cascade: ['all'])]
+    private Collection $eventData;
+
+    public function __construct()
+    {
+        $this->eventData = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +133,36 @@ class Event
         $this->imageFile = $imageFile;
         if (null !== $imageFile) {
             $this->updatedAt = new DateTime();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventData>
+     */
+    public function getEventData(): Collection
+    {
+        return $this->eventData;
+    }
+
+    public function addEventData(EventData $eventData): static
+    {
+        if (!$this->eventData->contains($eventData)) {
+            $this->eventData->add($eventData);
+            $eventData->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventData(EventData $eventData): static
+    {
+        if ($this->eventData->removeElement($eventData)) {
+            // set the owning side to null (unless already changed)
+            if ($eventData->getEvent() === $this) {
+                $eventData->setEvent(null);
+            }
         }
 
         return $this;
