@@ -21,6 +21,14 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    Symfony\Component\Security\Core\User\UserProviderInterface: '@security.user.provider.concrete.app_client_provider'
+
+    # ApiPlatform decorator service registration for access and refresh tokens
+    App\OpenApi\JwtClientDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@.inner']
+        autoconfigure: false
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
