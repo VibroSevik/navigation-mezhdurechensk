@@ -2,12 +2,23 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\UpdatedAtTrait;
 use App\Repository\MapObjectRepository;
+use DateTime;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[ORM\HasLifecycleCallbacks]
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: MapObjectRepository::class)]
 class MapObject
 {
+    use CreatedAtTrait;
+    use UpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -33,6 +44,14 @@ class MapObject
 
     #[ORM\Column(length: 1024)]
     private ?string $openingHours = null;
+
+    #[Vich\UploadableField(mapping: 'map_object_images', fileNameProperty: 'image')]
+    #[Assert\Image(mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'])]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    ##[Groups('mapObject:read')]
+    private ?string $image = null;
 
     public function getId(): ?int
     {
@@ -119,6 +138,33 @@ class MapObject
     public function setOpeningHours(string $openingHours): static
     {
         $this->openingHours = $openingHours;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): self
+    {
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
+            $this->updatedAt = new DateTime();
+        }
 
         return $this;
     }
