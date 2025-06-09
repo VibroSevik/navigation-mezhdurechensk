@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Traits\CreatedAtTrait;
@@ -14,6 +15,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[ApiResource(
+    description: 'реализует <a href="https://goo.su/abPDN">item info</a> и <a href="https://goo.su/kZZRY5">search item info</a> из дизайна'
+)]
 #[Get(
     normalizationContext: ['groups' => ['mapObject:read']],
     security: "is_granted('ROLE_USER')"
