@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -83,6 +84,11 @@ class EventCrudController extends AbstractCrudController
 
         yield VichImageField::new('image', 'Изображение')
                      ->hideOnForm();
+
+        yield FormField::addRow();
+
+        yield CollectionField::new('eventData', 'Текстовые данные')
+                     ->useEntryCrudForm(EventDataCrudController::class);
 
         yield DateTimeField::new('createdAt', 'Создано')
                      ->hideOnForm();
