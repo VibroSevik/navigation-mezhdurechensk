@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Traits\CreatedAtTrait;
@@ -16,6 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[ApiResource(
+    description: 'реализует <a href="https://goo.su/zXV63Um">news</a> и <a href="https://goo.su/XpatP">news inner</a> из дизайна'
+)]
 #[Get(
     normalizationContext: ['groups' => ['event:read']],
     security: "is_granted('ROLE_USER')"

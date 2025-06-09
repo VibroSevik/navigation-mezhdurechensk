@@ -112,6 +112,9 @@ readonly class JwtClientDecorator implements OpenApiFactoryInterface
         $openApi->getPaths()->addPath('/api/authentication_token', $pathUserAuthentication);
         $openApi->getPaths()->addPath('/api/token/refresh', $pathAccessTokenRefresh);
 
-        return $openApi;
+        $tags = $openApi->getTags();
+        $tag = new Model\Tag('Login Check', 'для JWT авторизации');
+        $tags[] = $tag;
+        return $openApi->withTags($tags);
     }
 }
