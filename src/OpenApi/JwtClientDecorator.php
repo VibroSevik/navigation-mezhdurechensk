@@ -11,36 +11,12 @@ readonly class JwtClientDecorator implements OpenApiFactoryInterface
 {
     public function __construct(
         private OpenApiFactoryInterface $decorated
-    ) {
-    }
+    )
+    {}
 
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = $this->decorated->__invoke($context);
-        $schemas = $openApi->getComponents()->getSchemas();
-
-        $schemas['Client'] = new ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'token' => [
-                    'type' => 'string',
-                    'readOnly' => true,
-                ],
-            ],
-        ]);
-        $schemas['CredentialsClient'] = new ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'username' => [
-                    'type' => 'string',
-                    'example' => 'username',
-                ],
-                'password' => [
-                    'type' => 'string',
-                    'example' => 'password',
-                ],
-            ],
-        ]);
 
         $pathUserAuthentication = new Model\PathItem(
             ref: 'JWT Token',
@@ -53,7 +29,13 @@ readonly class JwtClientDecorator implements OpenApiFactoryInterface
                         'content' => [
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/Client',
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'token' => [
+                                            'type' => 'string',
+                                            'readOnly' => true,
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -65,7 +47,60 @@ readonly class JwtClientDecorator implements OpenApiFactoryInterface
                     content: new ArrayObject([
                         'application/json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/CredentialsClient',
+                                'type' => 'object',
+                                'properties' => [
+                                    'username' => [
+                                        'type' => 'string',
+                                        'example' => 'username',
+                                    ],
+                                    'password' => [
+                                        'type' => 'string',
+                                        'example' => 'password',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ]),
+                ),
+                security: [],
+            ),
+        );
+
+        $pathAccessTokenRefresh = new Model\PathItem(
+            ref: 'New access Token',
+            post: new Model\Operation(
+                operationId: 'postCredentialsItem',
+                tags: ['Login Check'],
+                responses: [
+                    '200' => [
+                        'description' => 'Get access token',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'token' => [
+                                            'type' => 'string',
+                                            'readOnly' => true,
+                                        ]
+                                    ]
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                summary: 'Get access token by refresh token.',
+                requestBody: new Model\RequestBody(
+                    description: 'Generate client new access token',
+                    content: new ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'refresh_token' => [
+                                        'type' => 'string',
+                                    ]
+                                ]
                             ],
                         ],
                     ]),
@@ -75,6 +110,7 @@ readonly class JwtClientDecorator implements OpenApiFactoryInterface
         );
 
         $openApi->getPaths()->addPath('/api/authentication_token', $pathUserAuthentication);
+        $openApi->getPaths()->addPath('/api/token/refresh', $pathAccessTokenRefresh);
 
         return $openApi;
     }
