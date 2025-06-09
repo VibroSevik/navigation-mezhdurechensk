@@ -6,3 +6,7 @@ vich_uploader:
             uri_prefix: /images/map_object
             upload_destination: "%kernel.project_dir%/public/images/map_object"
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+        event_images:
+            uri_prefix: /images/event
+            upload_destination: "%kernel.project_dir%/public/images/event"
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

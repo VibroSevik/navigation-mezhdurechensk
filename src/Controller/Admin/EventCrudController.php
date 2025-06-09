@@ -2,11 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\Admin\Field\VichImageField;
 use App\Entity\Event;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -46,7 +49,37 @@ class EventCrudController extends AbstractCrudController
         yield TextField::new('name', 'Название')
             ->setColumns(3);
 
+        yield FormField::addRow();
+
         yield TextField::new('date', 'Время проведения')
             ->setColumns(3);
+
+        $image = VichImageField::new('imageFile', 'Изображение')
+            ->setHelp('
+                <div class="mt-3">
+                    <span class="badge badge-info">*.jpg</span>
+                    <span class="badge badge-info">*.jpeg</span>
+                    <span class="badge badge-info">*.png</span>
+                    <span class="badge badge-info">*.webp</span>
+                </div>
+            ')
+            ->onlyOnForms()
+            ->setFormTypeOption('allow_delete', true)
+            ->setRequired(true)
+            ->setColumns(2);
+
+        if (Crud::PAGE_EDIT == $pageName) {
+            $image->setRequired(false);
+        }
+
+        yield FormField::addRow();
+
+        yield $image;
+
+        yield VichImageField::new('image', 'Изображение')
+            ->hideOnForm();
+
+        yield DateTimeField::new('createdAt', 'Создано')
+            ->hideOnForm();
     }
 }
