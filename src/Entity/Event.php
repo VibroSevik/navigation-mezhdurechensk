@@ -63,6 +63,7 @@ class Event
      * @var Collection<int, EventData>
      */
     #[ORM\OneToMany(targetEntity: EventData::class, mappedBy: 'event', cascade: ['all'])]
+    #[Groups(['event:read'])]
     private Collection $eventData;
 
     public function __construct()

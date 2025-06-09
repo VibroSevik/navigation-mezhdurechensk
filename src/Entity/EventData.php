@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\EventDataRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: EventDataRepository::class)]
 class EventData
@@ -11,12 +12,15 @@ class EventData
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 4096)]
+    #[Groups(['event:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventData')]
