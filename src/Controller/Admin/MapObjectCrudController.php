@@ -77,18 +77,18 @@ class MapObjectCrudController extends AbstractCrudController
         yield FormField::addRow();
 
         $image = VichImageField::new('imageFile', 'Изображение')
-            ->setHelp('
-                <div class="mt-3">
-                    <span class="badge badge-info">*.jpg</span>
-                    <span class="badge badge-info">*.jpeg</span>
-                    <span class="badge badge-info">*.png</span>
-                    <span class="badge badge-info">*.webp</span>
-                </div>
-            ')
-            ->onlyOnForms()
-            ->setFormTypeOption('allow_delete', true)
-            ->setRequired(true)
-            ->setColumns(2);
+                     ->setHelp('
+                         <div class="mt-3">
+                             <span class="badge badge-info">*.jpg</span>
+                             <span class="badge badge-info">*.jpeg</span>
+                             <span class="badge badge-info">*.png</span>
+                             <span class="badge badge-info">*.webp</span>
+                         </div>
+                     ')
+                     ->onlyOnForms()
+                     ->setFormTypeOption('allow_delete', true)
+                     ->setRequired(true)
+                     ->setColumns(2);
 
         if (Crud::PAGE_EDIT == $pageName) {
             $image->setRequired(false);
@@ -96,9 +96,9 @@ class MapObjectCrudController extends AbstractCrudController
 
         yield $image;
         yield VichImageField::new('image', 'Изображение')
-            ->hideOnForm();
+                     ->hideOnForm();
 
         yield DateTimeField::new('createdAt', 'Создано')
-            ->hideOnForm();
+                     ->hideOnForm();
     }
 }
