@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -73,6 +74,14 @@ class MapObjectCrudController extends AbstractCrudController
 
         yield TextEditorField::new('openingHours', 'Режим работы')
                      ->setColumns(6);
+
+        yield FormField::addRow();
+
+        yield NumberField::new('coordinateX', 'Координата X')
+                     ->setColumns(3);
+
+        yield NumberField::new('coordinateY', 'Координата Y')
+                     ->setColumns(3);
 
         yield FormField::addRow();
 

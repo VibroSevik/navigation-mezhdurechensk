@@ -23,6 +23,7 @@ readonly class MapObjectNormalizer implements NormalizerInterface
         $data = $this->normalizer->normalize($object, $format, $context);
 
         $data['image'] = $this->storage->resolveUri($object, 'imageFile');
+        $data['coordinates'] = [$object->getCoordinateX(), $object->getCoordinateY()];
 
         return $data;
     }
