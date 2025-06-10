@@ -70,6 +70,15 @@ class Event
     #[Groups(['event:read'])]
     private Collection $eventData;
 
+    public function eventDataToString(): string
+    {
+        $sum = '';
+        foreach ($this->eventData as $eventDataItem) {
+            $sum .= $eventDataItem->getTitle() . PHP_EOL . $eventDataItem->getDescription() . PHP_EOL . PHP_EOL;
+        }
+        return $sum;
+    }
+
     public function __construct()
     {
         $this->eventData = new ArrayCollection();
