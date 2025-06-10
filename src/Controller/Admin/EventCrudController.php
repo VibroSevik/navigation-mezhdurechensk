@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class EventCrudController extends AbstractCrudController
@@ -48,17 +49,17 @@ class EventCrudController extends AbstractCrudController
                      ->onlyOnIndex();
 
         yield TextField::new('name', 'Название')
-                     ->setColumns(3);
+                     ->setColumns(4);
 
         yield FormField::addRow();
 
         yield TextField::new('date', 'Время проведения')
-                     ->setColumns(3);
+                     ->setColumns(4);
 
         yield FormField::addRow();
 
-        yield TextField::new('shortDescription', 'Короткое описание')
-                     ->setColumns(3);
+        yield TextareaField::new('shortDescription', 'Короткое описание')
+                     ->setColumns(4);
 
         $image = VichImageField::new('imageFile', 'Изображение')
                      ->setHelp('
