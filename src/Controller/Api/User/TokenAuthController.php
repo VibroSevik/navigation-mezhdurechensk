@@ -62,17 +62,17 @@ class TokenAuthController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['username']) || !isset($data['password'])) {
-            return new JsonResponse(['error' => 'Username and password are required'], 400);
+            return new JsonResponse(['error' => 'Username and password are required'], Response::HTTP_BAD_REQUEST);
         }
 
         $user = $this->userRepository->findOneBy(['username' => $data['username']]);
 
         if (!$user) {
-            return new JsonResponse(['error' => 'Invalid credentials'], 400);
+            return new JsonResponse(['error' => 'Invalid credentials'], Response::HTTP_BAD_REQUEST);
         }
 
         if (!$this->passwordHasher->isPasswordValid($user, $data['password'])) {
-            return new JsonResponse(['error' => 'Invalid credentials'], 400);
+            return new JsonResponse(['error' => 'Invalid credentials'], Response::HTTP_BAD_REQUEST);
         }
 
         $token = $this->jwtManager->create($user);
