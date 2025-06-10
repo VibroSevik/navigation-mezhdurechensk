@@ -22,11 +22,13 @@ class EventDataCrudController extends AbstractCrudController
                      ->onlyOnIndex();
 
         yield TextField::new('title', 'Заголовок')
+                     ->setColumns(7)
                      ->setRequired(true);
 
         yield FormField::addRow();
 
         yield TextareaField::new('description', 'Описание')
+                     ->setColumns(7)
                      ->setRequired(true);
     }
 }
