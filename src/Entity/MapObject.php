@@ -103,10 +103,10 @@ class MapObject
     private ?string $openingHours = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $coordinateX = null;
+    private ?string $coordinateX = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $coordinateY = null;
+    private ?string $coordinateY = null;
 
     #[Vich\UploadableField(mapping: 'map_object_images', fileNameProperty: 'image')]
     #[Assert\Image(mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'])]
@@ -205,24 +205,24 @@ class MapObject
         return $this;
     }
 
-    public function getCoordinateX(): ?float
+    public function getCoordinateX(): ?string
     {
         return $this->coordinateX;
     }
 
-    public function setCoordinateX(?float $coordinateX): static
+    public function setCoordinateX(?string $coordinateX): static
     {
         $this->coordinateX = $coordinateX;
 
         return $this;
     }
 
-    public function getCoordinateY(): ?float
+    public function getCoordinateY(): ?string
     {
         return $this->coordinateY;
     }
 
-    public function setCoordinateY(?float $coordinateY): static
+    public function setCoordinateY(?string $coordinateY): static
     {
         $this->coordinateY = $coordinateY;
 
