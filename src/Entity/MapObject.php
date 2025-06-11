@@ -102,6 +102,9 @@ class MapObject
     #[Groups('mapObject:read')]
     private ?string $openingHours = null;
 
+    #[ORM\Column(length: 512)]
+    private ?string $mapUrl = null;
+
     #[ORM\Column(nullable: true)]
     private ?string $coordinateX = null;
 
@@ -201,6 +204,18 @@ class MapObject
     public function setOpeningHours(string $openingHours): static
     {
         $this->openingHours = $openingHours;
+
+        return $this;
+    }
+
+    public function getMapUrl(): ?string
+    {
+        return $this->mapUrl;
+    }
+
+    public function setMapUrl(?string $mapUrl): static
+    {
+        $this->mapUrl = $mapUrl;
 
         return $this;
     }
