@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Admin\Field\VichImageField;
 use App\Entity\MapObject;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -42,6 +43,42 @@ class MapObjectCrudController extends AbstractCrudController
                      ]);
     }
 
+    // @todo: remove if after url becomes non-nullable
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        /** @var MapObject $entityInstance */
+        $url = $entityInstance->getMapUrl();
+        if (!$url) {
+            parent::persistEntity($entityManager, $entityInstance);
+            return;
+        }
+
+        $coordinates = explode('%', explode('&', explode('=', explode('point', $url)[1])[1])[0]);
+        $x = $coordinates[0];
+        $y = substr($coordinates[1], 2);
+        $entityInstance->setCoordinateX($x);
+        $entityInstance->setCoordinateY($y);
+        parent::persistEntity($entityManager, $entityInstance);
+    }
+
+    // @todo: remove if after url becomes non-nullable
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        /** @var MapObject $entityInstance */
+        $url = $entityInstance->getMapUrl();
+        if (!$url) {
+            parent::persistEntity($entityManager, $entityInstance);
+            return;
+        }
+
+        $coordinates = explode('%', explode('&', explode('=', explode('point', $url)[1])[1])[0]);
+        $x = $coordinates[0];
+        $y = substr($coordinates[1], 2);
+        $entityInstance->setCoordinateX($x);
+        $entityInstance->setCoordinateY($y);
+        parent::persistEntity($entityManager, $entityInstance);
+    }
+
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')
@@ -76,10 +113,16 @@ class MapObjectCrudController extends AbstractCrudController
 
         yield FormField::addRow();
 
+        yield TextField::new('mapUrl', 'Ссылка на объект на яндекс карте')
+                     ->onlyOnForms()
+                     ->setColumns(6);
+
         yield TextField::new('coordinateX', 'Координата X')
+                     ->onlyOnIndex()
                      ->setColumns(3);
 
         yield TextField::new('coordinateY', 'Координата Y')
+                     ->onlyOnIndex()
                      ->setColumns(3);
 
         yield FormField::addRow();
