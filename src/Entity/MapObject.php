@@ -5,9 +5,14 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\RequestBody;
+use App\Controller\Api\Route\BuildController;
 use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\UpdatedAtTrait;
 use App\Repository\MapObjectRepository;
+use ArrayObject;
 use DateTime;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -25,6 +30,34 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[GetCollection(
     paginationEnabled: false,
     normalizationContext: ['groups' => ['mapObject:read']],
+    security: "is_granted('ROLE_USER')"
+)]
+#[Post(
+    uriTemplate: '/route',
+    controller: BuildController::class,
+    openapi: new Operation(
+        requestBody: new RequestBody(
+            content: new ArrayObject([
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'startId' => [
+                                'type' => 'integer',
+                                'example' => 1,
+                                'required' => true
+                            ],
+                            'endId' => [
+                                'type' => 'integer',
+                                'example' => 2,
+                                'required' => true
+                            ]
+                        ]
+                    ]
+                ]
+            ])
+        )
+    ),
     security: "is_granted('ROLE_USER')"
 )]
 #[ORM\HasLifecycleCallbacks]
