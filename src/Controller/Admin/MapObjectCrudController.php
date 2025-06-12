@@ -107,11 +107,11 @@ class MapObjectCrudController extends AbstractCrudController
                      ->onlyOnForms()
                      ->setColumns(6);
 
-        yield TextField::new('longitude', 'Долгота')
+        yield TextField::new('latitude', 'Широта')
                      ->onlyOnIndex()
                      ->setColumns(3);
 
-        yield TextField::new('latitude', 'Широта')
+        yield TextField::new('longitude', 'Долгота')
                      ->onlyOnIndex()
                      ->setColumns(3);
 
