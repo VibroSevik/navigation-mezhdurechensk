@@ -4,38 +4,48 @@ namespace App\Controller\Api\Route;
 
 use App\Controller\Api\Route\Request\BuildRequest;
 use App\Repository\MapObjectRepository;
+use App\Service\QrCodeGeneratorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[AsController]
 class BuildController extends AbstractController
 {
     public function __construct(
         private readonly MapObjectRepository $mapObjectRepository,
+        private readonly QrCodeGeneratorService $qrCodeGenerator
     )
     {}
 
-    public function __invoke(#[MapRequestPayload] BuildRequest $request): JsonResponse
+    public function __invoke(#[MapRequestPayload] BuildRequest $request): BinaryFileResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $startPoint = $this->mapObjectRepository->findOneBy(['id' => $request->startId]);
         if (!$startPoint) {
-            return new JsonResponse('Start point not found', Response::HTTP_NOT_FOUND);
+            throw new NotFoundHttpException('Start point not found');
         }
 
         $endPoint = $this->mapObjectRepository->findOneBy(['id' => $request->endId]);
         if (!$endPoint) {
-            return new JsonResponse('End point not found', Response::HTTP_NOT_FOUND);
+            throw new NotFoundHttpException('End point not found');
         }
 
-        [$x0, $y0] = [$startPoint->getLongitude(), $startPoint->getLatitude()];
-        [$x1, $y1] = [$endPoint->getLongitude(), $endPoint->getLatitude()];
+        [$x0, $y0] = [$startPoint->getLatitude(), $startPoint->getLongitude()];
+        [$x1, $y1] = [$endPoint->getLatitude(), $endPoint->getLongitude()];
         $url = 'https://yandex.ru/maps/?rtext=' . $x0 . ',' . $y0 . '~' . $x1 . ',' . $y1;
 
-        return $this->json(['url' => $url], Response::HTTP_OK);
+        $outputPath = 'qrcode/qr.svg';
+        $this->qrCodeGenerator
+                ->setQrColor('black')
+                ->setBackground(false) // by default
+               #->setBackgroundColor('white')
+                ->generateDefault($url, $outputPath);
+
+        return new BinaryFileResponse($outputPath, Response::HTTP_OK);
     }
 }
