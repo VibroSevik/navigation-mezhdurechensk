@@ -8,6 +8,7 @@
     "ext-zip": "*",
     "api-platform/core": "4.*",
     "cboden/ratchet": "^0.4.4",
+    "chillerlan/php-qrcode": "*",
     "doctrine/doctrine-bundle": "2.*",
     "doctrine/doctrine-migrations-bundle": "3.*",
     "doctrine/orm": "3.*",

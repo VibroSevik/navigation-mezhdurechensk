@@ -106,10 +106,10 @@ class MapObject
     private ?string $mapUrl = null;
 
     #[ORM\Column(nullable: true)]
-    private ?string $coordinateX = null;
+    private ?string $longitude = null;
 
     #[ORM\Column(nullable: true)]
-    private ?string $coordinateY = null;
+    private ?string $latitude = null;
 
     #[Vich\UploadableField(mapping: 'map_object_images', fileNameProperty: 'image')]
     #[Assert\Image(mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'])]
@@ -220,26 +220,26 @@ class MapObject
         return $this;
     }
 
-    public function getCoordinateX(): ?string
+    public function getLongitude(): ?string
     {
-        return $this->coordinateX;
+        return $this->longitude;
     }
 
-    public function setCoordinateX(?string $coordinateX): static
+    public function setLongitude(?string $longitude): static
     {
-        $this->coordinateX = $coordinateX;
+        $this->longitude = $longitude;
 
         return $this;
     }
 
-    public function getCoordinateY(): ?string
+    public function getLatitude(): ?string
     {
-        return $this->coordinateY;
+        return $this->latitude;
     }
 
-    public function setCoordinateY(?string $coordinateY): static
+    public function setLatitude(?string $latitude): static
     {
-        $this->coordinateY = $coordinateY;
+        $this->latitude = $latitude;
 
         return $this;
     }
