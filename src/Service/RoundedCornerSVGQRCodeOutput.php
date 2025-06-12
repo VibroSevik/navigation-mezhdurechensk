@@ -9,8 +9,10 @@
  */
 namespace App\Service;
 
+use chillerlan\QRCode\Common\EccLevel;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\QRCode\Output\QRMarkupSVG;
+use chillerlan\QRCode\{QRCode, QROptions};
 
 //require_once __DIR__.'/../vendor/autoload.php';
 
@@ -18,6 +20,7 @@ class RoundedCornerSVGQRCodeOutput extends QRMarkupSVG{
 
     private static string $qrColor = '';
     private static string $backgroundColor = '';
+    private static bool $setBackground = false;
 
     public static function changeQrColor(string $qrColor): void
     {
@@ -27,6 +30,11 @@ class RoundedCornerSVGQRCodeOutput extends QRMarkupSVG{
     public static function changeBackgroundColor(string $backgroundColor): void
     {
         RoundedCornerSVGQRCodeOutput::$backgroundColor = $backgroundColor;
+    }
+
+    public static function setBackground(bool $setBackground)
+    {
+        RoundedCornerSVGQRCodeOutput::$setBackground = $setBackground;
     }
 
     // this constant may be added to QRMatrix

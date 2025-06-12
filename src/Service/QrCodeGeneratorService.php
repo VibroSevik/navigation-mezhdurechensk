@@ -20,6 +20,12 @@ class QrCodeGeneratorService
         return $this;
     }
 
+    public function setBackground(bool $setBackground): self
+    {
+        RoundedCornerSVGQRCodeOutput::setBackground($setBackground);
+        return $this;
+    }
+
     public function generateWithOptions(int $eccLevel,
                                         bool $imageBase64,
                                         bool $addQuietzone,
