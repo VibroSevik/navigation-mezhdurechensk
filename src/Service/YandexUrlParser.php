@@ -12,7 +12,7 @@ class YandexUrlParser
      * Receives url and parse longitude and latitude. <br>
      * Parsing gor buildings and objects a little different.
      * @param string $url yandex map url.
-     * @return array [longitude, latitude].
+     * @return array [latitude, longitude].
      */
     public function parseCoordinates(string $url): array
     {
@@ -38,7 +38,7 @@ class YandexUrlParser
     private function parseMapObjectCoordinates(string $url): array
     {
         $longitudeAndLatitude = explode('&', explode('point%5D=', $url)[1])[0];
-        return explode('%2C', $longitudeAndLatitude);
+        return array_reverse(explode('%2C', $longitudeAndLatitude));
     }
 
     /**
@@ -50,6 +50,6 @@ class YandexUrlParser
     private function parseMapBuildingCoordinates(string $url): array
     {
         $longitudeAndLatitude = explode('&', explode('ll=', $url)[1])[0];
-        return explode('%2C', $longitudeAndLatitude);
+        return array_reverse(explode('%2C', $longitudeAndLatitude));
     }
 }

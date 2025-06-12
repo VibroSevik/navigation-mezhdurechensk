@@ -53,9 +53,9 @@ class MapObjectCrudController extends AbstractCrudController
     {
         /** @var MapObject $entityInstance */
         $url = $entityInstance->getMapUrl();
-        [$longitude, $latitude] = $this->yandexUrlParser->parseCoordinates($url);
-        $entityInstance->setLongitude($longitude);
+        [$latitude, $longitude] = $this->yandexUrlParser->parseCoordinates($url);
         $entityInstance->setLatitude($latitude);
+        $entityInstance->setLongitude($longitude);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -63,9 +63,9 @@ class MapObjectCrudController extends AbstractCrudController
     {
         /** @var MapObject $entityInstance */
         $url = $entityInstance->getMapUrl();
-        [$longitude, $latitude] = $this->yandexUrlParser->parseCoordinates($url);
-        $entityInstance->setLongitude($longitude);
+        [$latitude, $longitude] = $this->yandexUrlParser->parseCoordinates($url);
         $entityInstance->setLatitude($latitude);
+        $entityInstance->setLongitude($longitude);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -107,11 +107,11 @@ class MapObjectCrudController extends AbstractCrudController
                      ->onlyOnForms()
                      ->setColumns(6);
 
-        yield TextField::new('longitude', 'Широта')
+        yield TextField::new('longitude', 'Долгота')
                      ->onlyOnIndex()
                      ->setColumns(3);
 
-        yield TextField::new('latitude', 'Долгота')
+        yield TextField::new('latitude', 'Широта')
                      ->onlyOnIndex()
                      ->setColumns(3);
 
