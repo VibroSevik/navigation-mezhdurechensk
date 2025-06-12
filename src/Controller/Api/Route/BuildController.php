@@ -32,8 +32,8 @@ class BuildController extends AbstractController
             return new JsonResponse('End point not found', Response::HTTP_NOT_FOUND);
         }
 
-        [$x0, $y0] = [$startPoint->getCoordinateX(), $startPoint->getCoordinateY()];
-        [$x1, $y1] = [$endPoint->getCoordinateX(), $endPoint->getCoordinateY()];
+        [$x0, $y0] = [$startPoint->getLongitude(), $startPoint->getLatitude()];
+        [$x1, $y1] = [$endPoint->getLongitude(), $endPoint->getLatitude()];
         $url = 'https://yandex.ru/maps/?rtext=' . $x0 . ',' . $y0 . '~' . $x1 . ',' . $y1;
 
         return $this->json(['url' => $url], Response::HTTP_OK);

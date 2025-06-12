@@ -48,16 +48,11 @@ class MapObjectCrudController extends AbstractCrudController
     {
         /** @var MapObject $entityInstance */
         $url = $entityInstance->getMapUrl();
-        if (!$url) {
-            parent::persistEntity($entityManager, $entityInstance);
-            return;
-        }
-
         $coordinates = explode('%', explode('&', explode('=', explode('point', $url)[1])[1])[0]);
-        $x = $coordinates[0];
-        $y = substr($coordinates[1], 2);
-        $entityInstance->setCoordinateX($x);
-        $entityInstance->setCoordinateY($y);
+        $y = $coordinates[0];
+        $x = substr($coordinates[1], 2);
+        $entityInstance->setLongitude($x);
+        $entityInstance->setLatitude($y);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -72,10 +67,10 @@ class MapObjectCrudController extends AbstractCrudController
         }
 
         $coordinates = explode('%', explode('&', explode('=', explode('point', $url)[1])[1])[0]);
-        $x = $coordinates[0];
-        $y = substr($coordinates[1], 2);
-        $entityInstance->setCoordinateX($x);
-        $entityInstance->setCoordinateY($y);
+        $longitude = $coordinates[0];
+        $latitude = substr($coordinates[1], 2);
+        $entityInstance->setLongitude($longitude);
+        $entityInstance->setLatitude($latitude);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -113,15 +108,15 @@ class MapObjectCrudController extends AbstractCrudController
 
         yield FormField::addRow();
 
-        yield TextField::new('mapUrl', 'Ссылка на объект на яндекс карте')
+        yield TextField::new('mapUrl', 'Ссылка на объект/здание на яндекс карте')
                      ->onlyOnForms()
                      ->setColumns(6);
 
-        yield TextField::new('coordinateX', 'Координата X')
+        yield TextField::new('longitude', 'Широта')
                      ->onlyOnIndex()
                      ->setColumns(3);
 
-        yield TextField::new('coordinateY', 'Координата Y')
+        yield TextField::new('latitude', 'Долгота')
                      ->onlyOnIndex()
                      ->setColumns(3);
 
