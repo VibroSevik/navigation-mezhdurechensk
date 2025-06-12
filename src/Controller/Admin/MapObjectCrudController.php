@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Admin\Field\VichImageField;
 use App\Entity\MapObject;
+use App\Service\YandexUrlParser;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -17,6 +18,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class MapObjectCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private readonly YandexUrlParser $yandexUrlParser,
+    )
+    {}
+
     public static function getEntityFqcn(): string
     {
         return MapObject::class;
@@ -43,32 +49,21 @@ class MapObjectCrudController extends AbstractCrudController
                      ]);
     }
 
-    // @todo: remove if after url becomes non-nullable
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         /** @var MapObject $entityInstance */
         $url = $entityInstance->getMapUrl();
-        $coordinates = explode('%', explode('&', explode('=', explode('point', $url)[1])[1])[0]);
-        $y = $coordinates[0];
-        $x = substr($coordinates[1], 2);
-        $entityInstance->setLongitude($x);
-        $entityInstance->setLatitude($y);
+        [$longitude, $latitude] = $this->yandexUrlParser->parseCoordinates($url);
+        $entityInstance->setLongitude($longitude);
+        $entityInstance->setLatitude($latitude);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
-    // @todo: remove if after url becomes non-nullable
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         /** @var MapObject $entityInstance */
         $url = $entityInstance->getMapUrl();
-        if (!$url) {
-            parent::persistEntity($entityManager, $entityInstance);
-            return;
-        }
-
-        $coordinates = explode('%', explode('&', explode('=', explode('point', $url)[1])[1])[0]);
-        $longitude = $coordinates[0];
-        $latitude = substr($coordinates[1], 2);
+        [$longitude, $latitude] = $this->yandexUrlParser->parseCoordinates($url);
         $entityInstance->setLongitude($longitude);
         $entityInstance->setLatitude($latitude);
         parent::persistEntity($entityManager, $entityInstance);
