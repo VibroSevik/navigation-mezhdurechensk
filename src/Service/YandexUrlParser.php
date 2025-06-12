@@ -12,10 +12,11 @@ class YandexUrlParser
      * Receives url and parse longitude and latitude. <br>
      * Parsing gor buildings and objects a little different.
      * @param string $url yandex map url.
-     * @return array $coordinates.
+     * @return array [longitude, latitude].
      */
     public function parseCoordinates(string $url): array
     {
+        // @todo: delete after mapUrl field into MapObject entity will be non-nullable
         if (!$url) {
             return [null, null];
         }
