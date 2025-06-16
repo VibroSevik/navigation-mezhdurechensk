@@ -3,6 +3,7 @@
 namespace App\Controller\Api\MapObject;
 
 use App\Entity\Resource\MapObjectTypes;
+use App\Repository\MapObjectRepository;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\Term;
@@ -20,6 +21,8 @@ class GetController extends AbstractController
     public function __construct(
         #[Autowire(service: 'fos_elastica.finder.map_object')]
         private readonly TransformedFinder $postFinder,
+
+        private readonly MapObjectRepository $mapObjectRepository,
     )
     {}
 
@@ -29,6 +32,12 @@ class GetController extends AbstractController
         #[MapQueryParameter] ?bool $sight,
         #[MapQueryParameter] ?bool $project): JsonResponse
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if (!($hotel || $restaurant || $sight || $project)) {
+            return $this->json($this->mapObjectRepository->findAll(), Response::HTTP_OK, [], ['groups' => ['mapObject:read']]);
+        }
+
         $boolQuery = new BoolQuery();
 
         if ($hotel) {

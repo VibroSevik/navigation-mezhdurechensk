@@ -7,7 +7,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
 use ApiPlatform\OpenApi\Model\RequestBody;
+use App\Controller\Api\MapObject\GetController;
 use App\Controller\Api\Route\BuildController;
 use App\Entity\Resource\MapObjectTypes;
 use App\Entity\Traits\CreatedAtTrait;
@@ -29,6 +31,44 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     security: "is_granted('ROLE_USER')"
 )]
 #[GetCollection(
+    uriTemplate: '/filtered',
+    controller: GetController::class,
+    openapi: new Operation(
+        parameters: [
+            new Parameter(
+                name: 'hotel',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+            new Parameter(
+                name: 'restaurant',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+            new Parameter(
+                name: 'sight',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+            new Parameter(
+                name: 'project',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+        ]
+    ),
     paginationEnabled: false,
     normalizationContext: ['groups' => ['mapObject:read']],
     security: "is_granted('ROLE_USER')"
