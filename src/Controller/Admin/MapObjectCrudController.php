@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -99,6 +100,12 @@ class MapObjectCrudController extends AbstractCrudController
         yield FormField::addRow();
 
         yield TextEditorField::new('openingHours', 'Режим работы')
+                     ->setColumns(6);
+
+        yield FormField::addRow();
+
+        yield ChoiceField::new('type', 'Тип объекта')
+                     ->setChoices(array_flip(MapObject::TYPES))
                      ->setColumns(6);
 
         yield FormField::addRow();

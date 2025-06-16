@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use App\Controller\Api\Route\BuildController;
+use App\Entity\Resource\MapObjectTypes;
 use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\UpdatedAtTrait;
 use App\Repository\MapObjectRepository;
@@ -67,6 +68,12 @@ class MapObject
 {
     use CreatedAtTrait;
     use UpdatedAtTrait;
+    public const array TYPES = [
+        MapObjectTypes::HOTEL->value => 'Гостиницы и отели',
+        MapObjectTypes::RESTAURANT->value => 'Рестораны и места общения',
+        MapObjectTypes::SIGHT->value => 'Достопримечательности',
+        MapObjectTypes::PROJECT->value => 'Проекты',
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -101,6 +108,10 @@ class MapObject
     #[ORM\Column(length: 1024)]
     #[Groups('mapObject:read')]
     private ?string $openingHours = null;
+
+    #[ORM\Column]
+    #[Groups('mapObject:read')]
+    private ?string $type = null;
 
     #[ORM\Column(length: 512)]
     private ?string $mapUrl = null;
@@ -204,6 +215,18 @@ class MapObject
     public function setOpeningHours(string $openingHours): static
     {
         $this->openingHours = $openingHours;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
