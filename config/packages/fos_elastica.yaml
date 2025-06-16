@@ -1,0 +1,16 @@
+fos_elastica:
+    clients:
+        default: {logger: true, host: '%env(ELASTICSEARCH_HOST)%', port: '%env(int:ELASTICSEARCH_PORT)%'}
+
+    indexes:
+        map_object:
+            properties:
+                objectType:
+                    type: keyword
+
+            persistence:
+                driver: orm
+                model: App\Entity\MapObject
+                provider: ~
+                listener: ~
+                finder: ~
