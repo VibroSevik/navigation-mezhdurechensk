@@ -69,6 +69,15 @@
             "ref": "b131e6cbfe1b898a508987851963fff485986285"
         }
     },
+    "friendsofsymfony/elastica-bundle": {
+        "version": "6.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "5.0",
+            "ref": "46c9cd2c1e07f0fcfd97e96f12b03b2e0845c4cd"
+        }
+    },
     "gesdinet/jwt-refresh-token-bundle": {
         "version": "1.4",
         "recipe": {

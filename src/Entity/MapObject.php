@@ -7,8 +7,11 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
 use ApiPlatform\OpenApi\Model\RequestBody;
+use App\Controller\Api\MapObject\GetController;
 use App\Controller\Api\Route\BuildController;
+use App\Entity\Resource\MapObjectTypes;
 use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\UpdatedAtTrait;
 use App\Repository\MapObjectRepository;
@@ -28,6 +31,44 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     security: "is_granted('ROLE_USER')"
 )]
 #[GetCollection(
+    uriTemplate: '/filtered',
+    controller: GetController::class,
+    openapi: new Operation(
+        parameters: [
+            new Parameter(
+                name: 'hotel',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+            new Parameter(
+                name: 'restaurant',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+            new Parameter(
+                name: 'sight',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+            new Parameter(
+                name: 'project',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'boolean',
+                ],
+            ),
+        ]
+    ),
     paginationEnabled: false,
     normalizationContext: ['groups' => ['mapObject:read']],
     security: "is_granted('ROLE_USER')"
@@ -67,6 +108,12 @@ class MapObject
 {
     use CreatedAtTrait;
     use UpdatedAtTrait;
+    public const array TYPES = [
+        MapObjectTypes::HOTEL->value => 'Гостиницы и отели',
+        MapObjectTypes::RESTAURANT->value => 'Рестораны и места общения',
+        MapObjectTypes::SIGHT->value => 'Достопримечательности',
+        MapObjectTypes::PROJECT->value => 'Проекты',
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -101,6 +148,10 @@ class MapObject
     #[ORM\Column(length: 1024)]
     #[Groups('mapObject:read')]
     private ?string $openingHours = null;
+
+    #[ORM\Column]
+    #[Groups('mapObject:read')]
+    private ?string $objectType = null;
 
     #[ORM\Column(length: 512)]
     private ?string $mapUrl = null;
@@ -204,6 +255,18 @@ class MapObject
     public function setOpeningHours(string $openingHours): static
     {
         $this->openingHours = $openingHours;
+
+        return $this;
+    }
+
+    public function getObjectType(): ?string
+    {
+        return $this->objectType;
+    }
+
+    public function setObjectType(string $objectType): static
+    {
+        $this->objectType = $objectType;
 
         return $this;
     }
