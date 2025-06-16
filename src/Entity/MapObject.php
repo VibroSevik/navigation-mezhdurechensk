@@ -83,12 +83,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                     'schema' => [
                         'type' => 'object',
                         'properties' => [
-                            'startId' => [
-                                'type' => 'integer',
-                                'example' => 1,
-                                'required' => true
-                            ],
-                            'endId' => [
+                            'destinationId' => [
                                 'type' => 'integer',
                                 'example' => 2,
                                 'required' => true

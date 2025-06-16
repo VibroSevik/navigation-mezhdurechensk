@@ -25,18 +25,13 @@ class BuildController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $startPoint = $this->mapObjectRepository->findOneBy(['id' => $request->startId]);
-        if (!$startPoint) {
-            throw new NotFoundHttpException('Start point not found');
+        $destinationPoint = $this->mapObjectRepository->findOneBy(['id' => $request->destinationPoint]);
+        if (!$destinationPoint) {
+            throw new NotFoundHttpException('Destination point not found');
         }
 
-        $endPoint = $this->mapObjectRepository->findOneBy(['id' => $request->endId]);
-        if (!$endPoint) {
-            throw new NotFoundHttpException('End point not found');
-        }
-
-        [$x0, $y0] = [$startPoint->getLatitude(), $startPoint->getLongitude()];
-        [$x1, $y1] = [$endPoint->getLatitude(), $endPoint->getLongitude()];
+        [$x0, $y0] = ['53.697395', '88.034651'];
+        [$x1, $y1] = [$destinationPoint->getLatitude(), $destinationPoint->getLongitude()];
         $url = 'https://yandex.ru/maps/?rtext=' . $x0 . ',' . $y0 . '~' . $x1 . ',' . $y1;
 
         $outputPath = 'qrcode/qr.svg';
