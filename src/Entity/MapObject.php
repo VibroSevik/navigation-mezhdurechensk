@@ -111,7 +111,7 @@ class MapObject
 
     #[ORM\Column]
     #[Groups('mapObject:read')]
-    private ?string $type = null;
+    private ?string $objectType = null;
 
     #[ORM\Column(length: 512)]
     private ?string $mapUrl = null;
@@ -219,14 +219,14 @@ class MapObject
         return $this;
     }
 
-    public function getType(): ?string
+    public function getObjectType(): ?string
     {
-        return $this->type;
+        return $this->objectType;
     }
 
-    public function setType(string $type): static
+    public function setObjectType(string $objectType): static
     {
-        $this->type = $type;
+        $this->objectType = $objectType;
 
         return $this;
     }

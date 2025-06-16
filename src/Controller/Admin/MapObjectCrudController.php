@@ -104,7 +104,7 @@ class MapObjectCrudController extends AbstractCrudController
 
         yield FormField::addRow();
 
-        yield ChoiceField::new('type', 'Тип объекта')
+        yield ChoiceField::new('objectType', 'Тип объекта')
                      ->setChoices(array_flip(MapObject::TYPES))
                      ->setColumns(6);
 
