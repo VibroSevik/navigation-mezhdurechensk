@@ -165,6 +165,36 @@ class MapObject
     #[Groups('mapObject:read')]
     private ?string $image = null;
 
+    #[ORM\Column(type: 'float')]
+    private ?float $x = null;
+
+    #[ORM\Column(type: 'float')]
+    private ?float $y = null;
+
+    public function getX(): ?float
+    {
+        return $this->x;
+    }
+
+    public function setX(?float $x): static
+    {
+        $this->x = $x;
+
+        return $this;
+    }
+
+    public function getY(): ?float
+    {
+        return $this->y;
+    }
+
+    public function setY(?float $y): static
+    {
+        $this->y = $y;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
