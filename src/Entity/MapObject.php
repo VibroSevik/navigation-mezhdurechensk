@@ -31,7 +31,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     security: "is_granted('ROLE_USER')"
 )]
 #[GetCollection(
-    uriTemplate: '/filtered',
+    uriTemplate: '/map_objects',
     controller: GetController::class,
     openapi: new Operation(
         parameters: [
@@ -169,7 +169,6 @@ class MapObject
     private ?File $mediaFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups('mapObject:read')]
     private ?string $media = null;
 
     public function getId(): ?int
