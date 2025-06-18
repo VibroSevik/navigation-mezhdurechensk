@@ -4,23 +4,29 @@ namespace App\Controller\Admin;
 
 use App\Controller\Admin\Field\VichImageField;
 use App\Entity\MapObject;
+use App\Repository\MapObjectRepository;
 use App\Service\YandexUrlParser;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class MapObjectCrudController extends AbstractCrudController
 {
     public function __construct(
         private readonly YandexUrlParser $yandexUrlParser,
+        private readonly MapObjectRepository $mapObjectRepository,
     )
     {}
 
@@ -36,7 +42,33 @@ class MapObjectCrudController extends AbstractCrudController
                      ->setEntityLabelInPlural('Объекты на карте')
                      ->setEntityLabelInSingular('Объект на карте')
                      ->setPageTitle(Crud::PAGE_NEW, 'Добавление объекта')
-                     ->setPageTitle(Crud::PAGE_EDIT, 'Изменение объекта');
+                     ->setPageTitle(Crud::PAGE_EDIT, 'Изменение объекта')
+                     ->overrideTemplate('crud/new', 'admin/new_map_form.html.twig')
+                     ->overrideTemplate('crud/edit', 'admin/edit_map_form.html.twig');
+    }
+
+    private function addPointsToRequest(): void
+    {
+        $allPoints = $this->mapObjectRepository
+                     ->createQueryBuilder('p')
+                     ->select('p.id, p.name, p.x, p.y, p.objectType')
+                     ->getQuery()
+                     ->getResult();
+        $this->getContext()->getRequest()->attributes->set('all_points', $allPoints);
+    }
+
+    public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
+    {
+        $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
+        $this->addPointsToRequest();
+        return $formBuilder;
+    }
+
+    public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
+    {
+        $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
+        $this->addPointsToRequest();
+        return $formBuilder;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -75,6 +107,8 @@ class MapObjectCrudController extends AbstractCrudController
         yield IdField::new('id')
                      ->onlyOnIndex();
 
+        yield FormField::addTab('Данные об объекте');
+
         yield TextField::new('name', 'Название')
                      ->setColumns(3);
 
@@ -102,7 +136,7 @@ class MapObjectCrudController extends AbstractCrudController
         yield TextEditorField::new('openingHours', 'Режим работы')
                      ->setColumns(6);
 
-        yield FormField::addRow();
+        yield FormField::addTab('Отметка на карте');
 
         yield ChoiceField::new('objectType', 'Тип объекта')
                      ->setChoices(array_flip(MapObject::TYPES))
@@ -120,6 +154,18 @@ class MapObjectCrudController extends AbstractCrudController
 
         yield TextField::new('longitude', 'Долгота')
                      ->onlyOnIndex()
+                     ->setColumns(3);
+
+        yield FormField::addRow();
+
+        yield TextField::new('x', 'Координата X (только для чтения)')
+                     ->setFormTypeOption('attr', ['readonly' => true])
+                     ->onlyOnForms()
+                     ->setColumns(3);
+
+        yield TextField::new('y', 'Координата Y (только для чтения)')
+                     ->setFormTypeOption('attr', ['readonly' => true])
+                     ->onlyOnForms()
                      ->setColumns(3);
 
         yield FormField::addRow();
