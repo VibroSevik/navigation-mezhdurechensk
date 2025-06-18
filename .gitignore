@@ -5,6 +5,7 @@ composer.lock
 /public/dump.zip
 /public/images
 /public/videos
+/public/media
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
