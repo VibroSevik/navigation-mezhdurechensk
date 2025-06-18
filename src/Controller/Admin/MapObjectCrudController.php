@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Admin\Field\VichFileField;
-use App\Controller\Admin\Field\VichImageField;
 use App\Entity\MapObject;
 use App\Repository\MapObjectRepository;
 use App\Service\YandexUrlParser;
@@ -44,8 +43,8 @@ class MapObjectCrudController extends AbstractCrudController
                      ->setEntityLabelInSingular('Объект на карте')
                      ->setPageTitle(Crud::PAGE_NEW, 'Добавление объекта')
                      ->setPageTitle(Crud::PAGE_EDIT, 'Изменение объекта')
-                     ->overrideTemplate('crud/new', 'admin/new_map_form.html.twig')
-                     ->overrideTemplate('crud/edit', 'admin/edit_map_form.html.twig');
+                     ->overrideTemplate('crud/new', 'admin/map_object/new_map_form.html.twig')
+                     ->overrideTemplate('crud/edit', 'admin/map_object/edit_map_form.html.twig');
     }
 
     private function addPointsToRequest(): void

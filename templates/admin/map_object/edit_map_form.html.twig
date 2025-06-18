@@ -1,4 +1,4 @@
-{# templates/admin/edit_map_form.html.twig #}
+{# templates/admin/map_object/edit_map_form.html.twig #}
 {% extends '@EasyAdmin/crud/edit.html.twig' %}
 
 {% block head_stylesheets %}
@@ -218,11 +218,11 @@
                 'default': '#4285F4'
             }
         %}
-        {{ is_current ? color.current : (objectType == 'you here' ? colors.you_here : color.default) }}
+        {{ is_current ? colors.current : (objectType == 'you here' ? colors.you_here : colors.default) }}
     {% endmacro %}
 
         <div class="custom-map-container">
-            <img id="map" src="{{ asset('images/map.png') }}" class="custom-map-img" alt="Custom Map">
+            <img id="map" src="{{ asset('map.png') }}" class="custom-map-img" alt="Custom Map">
 
             {% for point in app.request.get('all_points') ?? [] %}
                 <div class="map-marker existing-marker"

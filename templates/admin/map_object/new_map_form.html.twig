@@ -1,4 +1,4 @@
-{# templates/admin/new_map_form.html.twig #}
+{# templates/admin/map_object/new_map_form.html.twig #}
 {% extends '@EasyAdmin/crud/new.html.twig' %}
 
 {% block head_stylesheets %}
@@ -218,7 +218,7 @@
     {% endmacro %}
 
     <div class="custom-map-container">
-        <img src="{{ asset('images/map.png') }}" class="custom-map-img" alt="Custom Map">
+        <img src="{{ asset('map.png') }}" class="custom-map-img" alt="Custom Map">
 
         {% for point in app.request.get('all_points') ?? [] %}
             <div class="map-marker existing-marker"
