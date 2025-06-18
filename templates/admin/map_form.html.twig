@@ -120,6 +120,20 @@
 {% block body_javascript %}
     {{ parent() }}
     <script>
+        // Configures map.
+        // Map is invisible in "Данные об объекте" tab.
+        // Map is visible in "Отметка на карте" tab.
+        const configureMapContainer = (mapContainer) => {
+            mapContainer.style.visibility = 'hidden';
+            document.getElementById('tablist-tab-dannye-ob-obekte').addEventListener('click', function () {
+                mapContainer.style.visibility = 'hidden';
+            });
+
+            document.getElementById('tablist-tab-otmetka-na-karte').addEventListener('click', function () {
+                mapContainer.style.visibility = 'visible';
+            });
+        };
+
         // Creates legend DOMElement with legendTitle and legendItems.
         const createLegend = () => {
             const legendTitle = 'Легенда';
@@ -153,6 +167,7 @@
             const yInput = document.querySelector('#MapObject_y');
             let newMarker = null;
 
+            configureMapContainer(mapContainer);
             const legend = createLegend();
             document.querySelector('.custom-map-container').appendChild(legend);
 
