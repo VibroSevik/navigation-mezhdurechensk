@@ -7,17 +7,11 @@
         .custom-map-container {
             margin: 20px 0;
             position: relative;
-            overflow: hidden;
-            width: 100%;
-            height: 500px;
         }
         .custom-map-img {
-            position: absolute;
-            max-width: none;
-            transform-origin: 0 0;
-            transition: transform 0.1s;
+            max-width: 100%;
+            border: 1px solid #ddd;
         }
-
         .map-marker {
             position: absolute;
             width: 16px;
@@ -26,17 +20,14 @@
             transform: translate(-50%, -50%);
             cursor: pointer;
         }
-
         .existing-marker {
             background-color: #4285F4;
             border: 2px solid white;
         }
-
         .new-marker {
             background-color: #EA4335;
             animation: pulse 1.5s infinite;
         }
-
         .map-tooltip {
             position: absolute;
             bottom: calc(100% + 5px);
@@ -53,15 +44,75 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-
         .map-marker:hover .map-tooltip {
             opacity: 1;
         }
-
         @keyframes pulse {
             0% { transform: translate(-50%, -50%) scale(1); }
             50% { transform: translate(-50%, -50%) scale(1.2); }
             100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        .map-legend {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(255, 253, 250, 0.95);
+            padding: 12px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+            font-size: 14px;
+            border: 1px solid #e0d8c0;
+            max-width: 200px;
+            backdrop-filter: blur(2px);
+        }
+
+        .legend-title {
+            font-weight: 700;
+            color: #3a3a3a;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d8c0;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .legend-title i {
+            margin-right: 8px;
+            color: #5c5c5c;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .legend-label {
+            color: #3a3a3a;
+            font-weight: 500;
+            font-size: 13.5px;
+            line-height: 1.4;
+        }
+
+        .map-tab .custom-map-container {
+            display: none;
         }
     </style>
 {% endblock %}
@@ -69,6 +120,32 @@
 {% block body_javascript %}
     {{ parent() }}
     <script>
+        // Creates legend DOMElement with legendTitle and legendItems.
+        const createLegend = () => {
+            const legendTitle = 'Легенда';
+            const legendItems = [
+                { color: '#4285F4', label: 'Существующие объекты' },
+                { color: '#22c55e', label: 'Вы находитесь здесь' },
+                { color: '#EA4335', label: 'Новый объект' }
+            ];
+
+            const legend = document.createElement('div');
+
+            let legendHTML = '<div class="legend-title"><strong>' + legendTitle + '</strong></div>';
+            legendItems.forEach(item => {
+                legendHTML += `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${item.color}"></div>
+                        <div class="legend-label">${item.label}</div>
+                    </div>
+                `;
+            });
+
+            legend.className = 'map-legend';
+            legend.innerHTML = legendHTML;
+            return legend;
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             const mapContainer = document.querySelector('.custom-map-container');
             const mapImg = document.querySelector('.custom-map-img');
@@ -76,70 +153,28 @@
             const yInput = document.querySelector('#MapObject_y');
             let newMarker = null;
 
-            // Начальные параметры
-            let scale = 1;
-            const minScale = 0.5;
-            const maxScale = 3;
-            const scaleStep = 0.1;
+            const legend = createLegend();
+            document.querySelector('.custom-map-container').appendChild(legend);
 
-            // Позиционируем маркеры существующих точек
-            document.querySelectorAll('.existing-marker').forEach(marker => {
-                marker.style.transform = `translate(-50%, -50%) scale(${1/scale})`;
-            });
-
-            // Обработчик колесика мыши
-            mapContainer.addEventListener('wheel', function(e) {
-                e.preventDefault();
-
-                // Получаем позицию курсора относительно изображения
-                const rect = mapImg.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                const mouseY = e.clientY - rect.top;
-
-                // Вычисляем позицию в координатах оригинального изображения
-                const imgX = mouseX / scale;
-                const imgY = mouseY / scale;
-
-                // Изменяем масштаб
-                const delta = -Math.sign(e.deltaY);
-                const newScale = Math.max(minScale, Math.min(maxScale, scale + delta * scaleStep));
-
-                // Применяем трансформацию
-                mapImg.style.transform = `scale(${newScale})`;
-
-                // Корректируем позицию чтобы zoom был к курсору
-                const newMouseX = imgX * newScale;
-                const newMouseY = imgY * newScale;
-                mapImg.style.left = `${parseFloat(mapImg.style.left || 0) + (mouseX - newMouseX)}px`;
-                mapImg.style.top = `${parseFloat(mapImg.style.top || 0) + (mouseY - newMouseY)}px`;
-
-                scale = newScale;
-
-                // Масштабируем маркеры
-                document.querySelectorAll('.map-marker').forEach(marker => {
-                    marker.style.transform = `translate(-50%, -50%) scale(${1/scale})`;
-                });
-            });
-
-            // Обработчик клика (с учетом масштаба)
+            // Обработка клика по карте
             mapImg.addEventListener('click', function(e) {
-                const rect = mapImg.getBoundingClientRect();
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
 
-                // Вычисляем позицию с учетом масштаба и смещения
-                const x = (e.clientX - rect.left - parseFloat(mapImg.style.left || 0)) / scale;
-                const y = (e.clientY - rect.top - parseFloat(mapImg.style.top || 0)) / scale;
-
+                // Удаляем предыдущий маркер новой точки
                 if (newMarker) {
                     newMarker.remove();
                 }
 
+                // Создаем новый маркер
                 newMarker = document.createElement('div');
                 newMarker.className = 'map-marker new-marker';
                 newMarker.style.left = x + 'px';
                 newMarker.style.top = y + 'px';
-                newMarker.style.transform = `translate(-50%, -50%) scale(${1/scale})`;
-                mapContainer.appendChild(newMarker);
+                mapImg.parentElement.appendChild(newMarker);
 
+                // Заполняем поля формы
                 xInput.value = x;
                 yInput.value = y;
             });
@@ -150,12 +185,18 @@
 {% block main %}
     {{ parent() }}
 
+    {% macro get_marker_style(objectType, is_current) %}
+        {{ is_current ? '#e37400' : (objectType == 'you here' ? '#22c55e' : '#4285F4') }}
+    {% endmacro %}
+
     <div class="custom-map-container">
         <img src="{{ asset('images/map.png') }}" class="custom-map-img" alt="Custom Map">
 
         {% for point in app.request.get('all_points') ?? [] %}
             <div class="map-marker existing-marker"
-                 style="left: {{ point.x }}px; top: {{ point.y }}px;">
+                 style="left: {{ point.x }}px;
+                        top: {{ point.y }}px;
+                        background-color: {{ _self.get_marker_style(point.objectType, point.id == entity.instance.id) }}">
                 <div class="map-tooltip">{{ point.name }}</div>
             </div>
         {% endfor %}
