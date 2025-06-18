@@ -120,6 +120,13 @@
 {% block body_javascript %}
     {{ parent() }}
     <script>
+        const mapPointsColors = {
+            'you_here': '#22c55e',
+            'new': '#ea4335',
+            'current': '#e37400',
+            'default': '#4285F4'
+        };
+
         // Configures map.
         // Map is invisible in "Данные об объекте" tab.
         // Map is visible in "Отметка на карте" tab.
@@ -138,9 +145,9 @@
         const createLegend = () => {
             const legendTitle = 'Легенда';
             const legendItems = [
-                { color: '#4285F4', label: 'Существующие объекты' },
-                { color: '#22c55e', label: 'Вы находитесь здесь' },
-                { color: '#EA4335', label: 'Новый объект' }
+                { color: mapPointsColors.default, label: 'Существующие объекты' },
+                { color: mapPointsColors.you_here, label: 'Вы находитесь здесь' },
+                { color: mapPointsColors.new, label: 'Новый объект' }
             ];
 
             const legend = document.createElement('div');
@@ -161,6 +168,7 @@
         };
 
         document.addEventListener('DOMContentLoaded', function() {
+            history.pushState(null, null, '?color=' + mapPointsColors);
             const mapContainer = document.querySelector('.custom-map-container');
             const mapImg = document.querySelector('.custom-map-img');
             const xInput = document.querySelector('#MapObject_x');
@@ -200,8 +208,13 @@
 {% block main %}
     {{ parent() }}
 
-    {% macro get_marker_style(objectType, is_current) %}
-        {{ is_current ? '#e37400' : (objectType == 'you here' ? '#22c55e' : '#4285F4') }}
+    {% macro get_marker_style(objectType) %}
+        {% set colors = {
+                'you_here': '#22c55e',
+                'default': '#4285F4'
+            }
+        %}
+        {{ objectType == 'you here' ? colors.you_here : colors.default }}
     {% endmacro %}
 
     <div class="custom-map-container">
@@ -211,7 +224,7 @@
             <div class="map-marker existing-marker"
                  style="left: {{ point.x }}px;
                         top: {{ point.y }}px;
-                        background-color: {{ _self.get_marker_style(point.objectType, point.id == entity.instance.id) }}">
+                        background-color: {{ _self.get_marker_style(point.objectType) }}">
                 <div class="map-tooltip">{{ point.name }}</div>
             </div>
         {% endfor %}
