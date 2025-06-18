@@ -104,6 +104,7 @@ class MapObject
     use CreatedAtTrait;
     use UpdatedAtTrait;
     public const array TYPES = [
+        MapObjectTypes::YOU_HERE->value => 'Вы здесь',
         MapObjectTypes::HOTEL->value => 'Гостиницы и отели',
         MapObjectTypes::RESTAURANT->value => 'Рестораны и места общения',
         MapObjectTypes::SIGHT->value => 'Достопримечательности',
@@ -157,13 +158,19 @@ class MapObject
     #[ORM\Column(nullable: true)]
     private ?string $latitude = null;
 
-    #[Vich\UploadableField(mapping: 'map_object_images', fileNameProperty: 'image')]
-    #[Assert\Image(mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'])]
-    private ?File $imageFile = null;
+    #[ORM\Column]
+    private ?string $x = null;
+
+    #[ORM\Column]
+    private ?string $y = null;
+
+    #[Vich\UploadableField(mapping: 'map_object_media', fileNameProperty: 'media')]
+    #[Assert\File(extensions: ['png', 'jpeg', 'jpg', 'webp', 'mp4', 'webm'])]
+    private ?File $mediaFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups('mapObject:read')]
-    private ?string $image = null;
+    private ?string $media = null;
 
     public function getId(): ?int
     {
@@ -302,27 +309,51 @@ class MapObject
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getX(): ?string
     {
-        return $this->image;
+        return $this->x;
     }
 
-    public function setImage(?string $image): static
+    public function setX(?string $x): static
     {
-        $this->image = $image;
+        $this->x = $x;
 
         return $this;
     }
 
-    public function getImageFile(): ?File
+    public function getY(): ?string
     {
-        return $this->imageFile;
+        return $this->y;
     }
 
-    public function setImageFile(?File $imageFile): self
+    public function setY(?string $y): static
     {
-        $this->imageFile = $imageFile;
-        if (null !== $imageFile) {
+        $this->y = $y;
+
+        return $this;
+    }
+
+    public function getMedia(): ?string
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?string $media): static
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
+    public function getMediaFile(): ?File
+    {
+        return $this->mediaFile;
+    }
+
+    public function setMediaFile(?File $mediaFile): self
+    {
+        $this->mediaFile = $mediaFile;
+        if (null !== $mediaFile) {
             $this->updatedAt = new DateTime();
         }
 

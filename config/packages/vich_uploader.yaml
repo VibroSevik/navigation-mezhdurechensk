@@ -2,9 +2,9 @@ vich_uploader:
     db_driver: orm
 
     mappings:
-        map_object_images:
-            uri_prefix: /images/map_object
-            upload_destination: "%kernel.project_dir%/public/images/map_object"
+        map_object_media:
+            uri_prefix: /media/map_object
+            upload_destination: "%kernel.project_dir%/public/media/map_object"
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
         event_images:
             uri_prefix: /images/event
