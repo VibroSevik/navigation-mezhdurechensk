@@ -177,8 +177,6 @@ class MapObjectCrudController extends AbstractCrudController
                              <span class="badge badge-info">*.jpeg</span>
                              <span class="badge badge-info">*.png</span>
                              <span class="badge badge-info">*.webp</span>
-                             <span class="badge badge-info">*.mp4</span>
-                             <span class="badge badge-info">*.webm</span>
                          </div>
                      ')
                      ->onlyOnForms()
