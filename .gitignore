@@ -3,9 +3,9 @@ composer.lock
 /public/files
 /public/dump.sql
 /public/dump.zip
-/public/images
+/public/images/map_object
+/public/images/event
 /public/videos
-/public/media
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

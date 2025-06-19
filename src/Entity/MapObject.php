@@ -164,12 +164,12 @@ class MapObject
     #[ORM\Column]
     private ?string $y = null;
 
-    #[Vich\UploadableField(mapping: 'map_object_media', fileNameProperty: 'media')]
-    #[Assert\File(extensions: ['png', 'jpeg', 'jpg', 'webp', 'mp4', 'webm'])]
-    private ?File $mediaFile = null;
+    #[Vich\UploadableField(mapping: 'map_object_images', fileNameProperty: 'image')]
+    #[Assert\Image(extensions: ['png', 'jpeg', 'jpg', 'webp'])]
+    private ?File $imageFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $media = null;
+    private ?string $image = null;
 
     public function getId(): ?int
     {
@@ -332,27 +332,27 @@ class MapObject
         return $this;
     }
 
-    public function getMedia(): ?string
+    public function getImage(): ?string
     {
-        return $this->media;
+        return $this->image;
     }
 
-    public function setMedia(?string $media): static
+    public function setImage(?string $image): static
     {
-        $this->media = $media;
+        $this->image = $image;
 
         return $this;
     }
 
-    public function getMediaFile(): ?File
+    public function getImageFile(): ?File
     {
-        return $this->mediaFile;
+        return $this->imageFile;
     }
 
-    public function setMediaFile(?File $mediaFile): self
+    public function setImageFile(?File $imageFile): self
     {
-        $this->mediaFile = $mediaFile;
-        if (null !== $mediaFile) {
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
             $this->updatedAt = new DateTime();
         }
 

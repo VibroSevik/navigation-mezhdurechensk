@@ -23,7 +23,7 @@ readonly class MapObjectNormalizer implements NormalizerInterface
         $data = $this->normalizer->normalize($object, $format, $context);
 
         $data['media']['source'] = $this->storage->resolveUri($object, 'mediaFile');
-        $data['media']['type'] = str_contains($object->getMedia(), '.mp4') || str_contains($object->getMedia(), '.webm') ? 'video' : 'image';
+        $data['media']['type'] = str_contains($object->getImage(), '.mp4') || str_contains($object->getImage(), '.webm') ? 'video' : 'image';
 
         $data['coordinates']['latitude'] = $object->getLatitude();
         $data['coordinates']['longitude'] = $object->getLongitude();
