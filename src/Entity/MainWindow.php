@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\MainWindowRepository;
 use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\UpdatedAtTrait;
@@ -11,6 +14,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource(
+    description: 'медиа для главного экрана',
+)]
+#[Get(
+    normalizationContext: ['groups' => ['main_window:read']],
+    security: "is_granted('ROLE_USER')"
+)]
+#[GetCollection(
+    paginationEnabled: false,
+    normalizationContext: ['groups' => ['main_window:read']],
+    security: "is_granted('ROLE_USER')",
+)]
 #[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: MainWindowRepository::class)]
