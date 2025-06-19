@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Event;
+use App\Entity\MainWindow;
 use App\Entity\MapObject;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -44,6 +45,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Объекты на карте', 'fa-solid fa-map-location-dot', MapObject::class)
             ->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Новости и события', 'fa-solid fa-newspaper', Event::class)
+            ->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Медиа главного меню', 'fa-solid fa-photo-film', MainWindow::class)
             ->setPermission('ROLE_ADMIN');
 
         yield MenuItem::section('Настройки');

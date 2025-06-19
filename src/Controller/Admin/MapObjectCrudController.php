@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Controller\Admin\Field\VichFileField;
+use App\Controller\Admin\Field\VichImageField;
 use App\Entity\MapObject;
 use App\Repository\MapObjectRepository;
 use App\Service\YandexUrlParser;
@@ -170,15 +170,13 @@ class MapObjectCrudController extends AbstractCrudController
 
         yield FormField::addRow();
 
-        $file = VichFileField::new('mediaFile', 'Медиа')
+        $image = VichImageField::new('imageFile', 'Изображение')
                      ->setHelp('
                          <div class="mt-3">
                              <span class="badge badge-info">*.jpg</span>
                              <span class="badge badge-info">*.jpeg</span>
                              <span class="badge badge-info">*.png</span>
                              <span class="badge badge-info">*.webp</span>
-                             <span class="badge badge-info">*.mp4</span>
-                             <span class="badge badge-info">*.webm</span>
                          </div>
                      ')
                      ->onlyOnForms()
@@ -187,11 +185,11 @@ class MapObjectCrudController extends AbstractCrudController
                      ->setColumns(2);
 
         if (Crud::PAGE_EDIT == $pageName) {
-            $file->setRequired(false);
+            $image->setRequired(false);
         }
 
-        yield $file;
-        yield VichFileField::new('media', 'Медиа')
+        yield $image;
+        yield VichImageField::new('image', 'Изображение')
                      ->hideOnForm();
 
         yield DateTimeField::new('createdAt', 'Создано')

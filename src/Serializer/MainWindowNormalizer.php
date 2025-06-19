@@ -2,12 +2,12 @@
 
 namespace App\Serializer;
 
-use App\Entity\MapObject;
+use App\Entity\MainWindow;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-readonly class MapObjectNormalizer implements NormalizerInterface
+readonly class MainWindowNormalizer implements NormalizerInterface
 {
     public function __construct(
         #[Autowire(service: 'serializer.normalizer.object')]
@@ -19,28 +19,24 @@ readonly class MapObjectNormalizer implements NormalizerInterface
 
     public function normalize($object, string $format = null, array $context = []): array
     {
-        /* @var MapObject $object */
+        /* @var MainWindow $object */
         $data = $this->normalizer->normalize($object, $format, $context);
 
-        $data['image'] = $this->storage->resolveUri($object, 'imageFile');
-
-        $data['coordinates']['latitude'] = $object->getLatitude();
-        $data['coordinates']['longitude'] = $object->getLongitude();
-        $data['coordinates']['x'] = $object->getX();
-        $data['coordinates']['y'] = $object->getY();
+        $data['source'] = $this->storage->resolveUri($object, 'mediaFile');
+        $data['type'] = str_contains($object->getMedia(), '.mp4') || str_contains($object->getMedia(), '.webm') ? 'video' : 'image';
 
         return $data;
     }
 
     public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
-        return $data instanceof MapObject;
+        return $data instanceof MainWindow;
     }
 
     public function getSupportedTypes(?string $format): array
     {
         return [
-            MapObject::class => true,
+            MainWindow::class => true,
         ];
     }
 }
