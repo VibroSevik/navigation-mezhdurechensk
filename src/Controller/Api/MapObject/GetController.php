@@ -42,7 +42,7 @@ class GetController extends AbstractController
         $boolQuery = new BoolQuery();
 
         if (!empty($name)) {
-            $nameQuery = new Query\Wildcard('name', $name . '*');
+            $nameQuery = new Query\Wildcard('name', mb_strtolower($name) . '*');
             $boolQuery->addMust($nameQuery);
         }
 

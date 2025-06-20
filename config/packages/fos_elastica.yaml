@@ -4,12 +4,20 @@ fos_elastica:
 
     indexes:
         map_object:
+            settings:
+                analysis:
+                    analyzer:
+                        lowercase_analyzer:
+                            type: custom
+                            tokenizer: standard
+                            filter: [ lowercase ]
+
             properties:
                 objectType:
                     type: keyword
                 name:
                     type: text
-                    analyzer: standard
+                    analyzer: lowercase_analyzer
 
             persistence:
                 driver: orm
