@@ -40,7 +40,7 @@ class MainWindow
     private ?int $id = null;
 
     #[Vich\UploadableField(mapping: 'main_window_media', fileNameProperty: 'media')]
-    #[Assert\File(extensions: ['mp4', 'webm'])]
+    #[Assert\File(extensions: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'webm'])]
     private ?File $mediaFile = null;
 
     #[ORM\Column(length: 255)]
