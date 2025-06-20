@@ -179,27 +179,37 @@
             const legend = createLegend();
             document.querySelector('.custom-map-container').appendChild(legend);
 
-            // Обработка клика по карте
+            // Initializing existing markers
+            document.querySelectorAll('.existing-marker').forEach(marker => {
+                const rect = mapContainer.getBoundingClientRect();
+                marker.style.transform = `translate(-50%, -50%) scale(1)`;
+                const x = marker.style.left.split('p')[0];
+                const y = marker.style.top.split('p')[0];
+                marker.style.left = x * rect.width / 12848 + 'px';
+                marker.style.top = y * rect.height / 9636 + 'px';
+            });
+
+            // Map click handler
             mapImg.addEventListener('click', function(e) {
                 const rect = this.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
 
-                // Удаляем предыдущий маркер новой точки
+                // Remove last new marker
                 if (newMarker) {
                     newMarker.remove();
                 }
 
-                // Создаем новый маркер
+                // Create new marker
                 newMarker = document.createElement('div');
                 newMarker.className = 'map-marker new-marker';
                 newMarker.style.left = x + 'px';
                 newMarker.style.top = y + 'px';
                 mapImg.parentElement.appendChild(newMarker);
 
-                // Заполняем поля формы
-                xInput.value = x;
-                yInput.value = y;
+                // Set value into dashboard
+                xInput.value = 12848 * x / mapImg.width;
+                yInput.value = 9636 * y / mapImg.height;
             });
         });
     </script>
@@ -218,7 +228,7 @@
     {% endmacro %}
 
     <div class="custom-map-container">
-        <img src="{{ asset('images/map.png') }}" class="custom-map-img" alt="Custom Map">
+        <img src="{{ asset('images/map.svg') }}" class="custom-map-img" alt="Custom Map">
 
         {% for point in app.request.get('all_points') ?? [] %}
             <div class="map-marker existing-marker"
