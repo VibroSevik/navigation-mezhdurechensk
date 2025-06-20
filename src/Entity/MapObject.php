@@ -36,6 +36,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     openapi: new Operation(
         parameters: [
             new Parameter(
+                name: 'name',
+                in: 'query',
+                required: false,
+                schema: [
+                    'type' => 'string',
+                ],
+            ),
+            new Parameter(
                 name: 'hotel',
                 in: 'query',
                 required: false,

@@ -7,6 +7,9 @@ fos_elastica:
             properties:
                 objectType:
                     type: keyword
+                name:
+                    type: text
+                    analyzer: standard
 
             persistence:
                 driver: orm

@@ -27,6 +27,7 @@ class GetController extends AbstractController
     {}
 
     public function __invoke(
+        #[MapQueryParameter] ?string $name,
         #[MapQueryParameter] ?bool $hotel,
         #[MapQueryParameter] ?bool $restaurant,
         #[MapQueryParameter] ?bool $sight,
@@ -34,11 +35,16 @@ class GetController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        if (!($hotel || $restaurant || $sight || $project)) {
+        if (!($name || $hotel || $restaurant || $sight || $project)) {
             return $this->json($this->mapObjectRepository->findAll(), Response::HTTP_OK, [], ['groups' => ['mapObject:read']]);
         }
 
         $boolQuery = new BoolQuery();
+
+        if (!empty($name)) {
+            $nameQuery = new Query\Wildcard('name', $name . '*');
+            $boolQuery->addMust($nameQuery);
+        }
 
         if ($hotel) {
             $hotelQuery = new Term();
