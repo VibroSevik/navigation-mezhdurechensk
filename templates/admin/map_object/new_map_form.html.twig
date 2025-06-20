@@ -179,6 +179,16 @@
             const legend = createLegend();
             document.querySelector('.custom-map-container').appendChild(legend);
 
+            // Initializing existing markers
+            document.querySelectorAll('.existing-marker').forEach(marker => {
+                const rect = mapContainer.getBoundingClientRect();
+                marker.style.transform = `translate(-50%, -50%) scale(1)`;
+                const x = marker.style.left.split('p')[0];
+                const y = marker.style.top.split('p')[0];
+                marker.style.left = x * rect.width / 12848 + 'px';
+                marker.style.top = y * rect.height / 9636 + 'px';
+            });
+
             // Map click handler
             mapImg.addEventListener('click', function(e) {
                 const rect = this.getBoundingClientRect();
