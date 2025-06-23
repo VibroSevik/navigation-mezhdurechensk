@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Admin\Field\VichImageField;
 use App\Entity\MapObject;
+use App\Entity\Resource\MapTypes;
 use App\Repository\MapObjectRepository;
 use App\Service\YandexUrlParser;
 use Doctrine\ORM\EntityManagerInterface;
@@ -89,6 +90,7 @@ class MapObjectCityCrudController extends AbstractCrudController
         [$latitude, $longitude] = $this->yandexUrlParser->parseCoordinates($url);
         $entityInstance->setLatitude($latitude);
         $entityInstance->setLongitude($longitude);
+        $entityInstance->setMapType(MapTypes::CITY->value);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
