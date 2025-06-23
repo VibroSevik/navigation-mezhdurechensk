@@ -230,7 +230,7 @@
     {% endmacro %}
 
     <div class="custom-map-container">
-        <img id="map" src="{{ asset('images/map.svg') }}" class="custom-map-img" alt="Custom Map">
+        <img id="map" src="{{ asset('images/map_city.svg') }}" class="custom-map-img" alt="Custom Map">
 
         {% for point in app.request.get('all_points') ?? [] %}
             <div class="map-marker existing-marker"
