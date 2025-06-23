@@ -1,5 +1,5 @@
-{# templates/admin/map_object/edit_map_form.html.twig #}
-{% extends '@EasyAdmin/crud/edit.html.twig' %}
+{# templates/admin/map_object/city_map/new_map_form.html.twig #}
+{% extends '@EasyAdmin/crud/new.html.twig' %}
 
 {% block head_stylesheets %}
     {{ parent() }}
@@ -147,7 +147,6 @@
             const legendItems = [
                 { color: mapPointsColors.default, label: 'Существующие объекты' },
                 { color: mapPointsColors.you_here, label: 'Вы находитесь здесь' },
-                { color: mapPointsColors.current, label: 'Текущий объект' },
                 { color: mapPointsColors.new, label: 'Новый объект' }
             ];
 
@@ -169,6 +168,7 @@
         };
 
         document.addEventListener('DOMContentLoaded', function() {
+            history.pushState(null, null, '?color=' + mapPointsColors);
             const mapContainer = document.querySelector('.custom-map-container');
             const mapImg = document.querySelector('.custom-map-img');
             const xInput = document.querySelector('#MapObject_x');
@@ -192,8 +192,8 @@
             // Map click handler
             mapImg.addEventListener('click', function(e) {
                 const rect = this.getBoundingClientRect();
-                const x = (e.clientX - rect.left);
-                const y = (e.clientY - rect.top);
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
 
                 // Remove last new marker
                 if (newMarker) {
@@ -205,8 +205,7 @@
                 newMarker.className = 'map-marker new-marker';
                 newMarker.style.left = x + 'px';
                 newMarker.style.top = y + 'px';
-                newMarker.style.transform = `translate(-50%, -50%) scale(1)`;
-                mapContainer.appendChild(newMarker);
+                mapImg.parentElement.appendChild(newMarker);
 
                 // Set value into dashboard
                 xInput.value = 12848 * x / mapImg.width;
@@ -219,24 +218,23 @@
 {% block main %}
     {{ parent() }}
 
-    {% macro get_marker_style(objectType, is_current) %}
+    {% macro get_marker_style(objectType) %}
         {% set colors = {
                 'you_here': '#22c55e',
-                'current': '#e37400',
                 'default': '#4285F4'
             }
         %}
-        {{ is_current ? colors.current : (objectType == 'you here' ? colors.you_here : colors.default) }}
+        {{ objectType == 'you here' ? colors.you_here : colors.default }}
     {% endmacro %}
 
     <div class="custom-map-container">
-        <img id="map" src="{{ asset('images/map.svg') }}" class="custom-map-img" alt="Custom Map">
+        <img src="{{ asset('images/map.svg') }}" class="custom-map-img" alt="Custom Map">
 
         {% for point in app.request.get('all_points') ?? [] %}
             <div class="map-marker existing-marker"
                  style="left: {{ point.x }}px;
-                         top: {{ point.y }}px;
-                         background-color: {{ _self.get_marker_style(point.objectType, point.id == entity.instance.id) }}">
+                        top: {{ point.y }}px;
+                        background-color: {{ _self.get_marker_style(point.objectType) }}">
                 <div class="map-tooltip">{{ point.name }}</div>
             </div>
         {% endfor %}

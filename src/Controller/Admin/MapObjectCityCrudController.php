@@ -43,8 +43,8 @@ class MapObjectCityCrudController extends AbstractCrudController
                      ->setEntityLabelInSingular('Объект на карте')
                      ->setPageTitle(Crud::PAGE_NEW, 'Добавление объекта')
                      ->setPageTitle(Crud::PAGE_EDIT, 'Изменение объекта')
-                     ->overrideTemplate('crud/new', 'admin/map_object/new_map_form.html.twig')
-                     ->overrideTemplate('crud/edit', 'admin/map_object/edit_map_form.html.twig');
+                     ->overrideTemplate('crud/new', 'admin/map_object/city_map/new_map_form.html.twig')
+                     ->overrideTemplate('crud/edit', 'admin/map_object/city_map/edit_map_form.html.twig');
     }
 
     private function addPointsToRequest(): void
