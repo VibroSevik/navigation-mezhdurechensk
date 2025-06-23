@@ -30,8 +30,8 @@ class MapObjectCityCrudController extends AbstractMapObjectCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-                     ->overrideTemplate('crud/new', 'admin/map_object/city_map/new_map_form.html.twig')
-                     ->overrideTemplate('crud/edit', 'admin/map_object/city_map/edit_map_form.html.twig');
+                     ->overrideTemplate('crud/new', 'admin/map_object/city_map/base_form.html.twig')
+                     ->overrideTemplate('crud/edit', 'admin/map_object/city_map/base_form.html.twig');
     }
 
     private function addPointsToRequest(): void
