@@ -120,6 +120,9 @@
 {% block body_javascript %}
     {{ parent() }}
     <script>
+        const mapOriginalWidth = 1280;
+        const mapOriginalHeight = 720;
+
         const mapPointsColors = {
             'you_here': '#22c55e',
             'new': '#ea4335',
@@ -185,8 +188,8 @@
                 marker.style.transform = `translate(-50%, -50%) scale(1)`;
                 const x = marker.style.left.split('p')[0];
                 const y = marker.style.top.split('p')[0];
-                marker.style.left = x * rect.width / 12848 + 'px';
-                marker.style.top = y * rect.height / 9636 + 'px';
+                marker.style.left = x * rect.width / mapOriginalWidth + 'px';
+                marker.style.top = y * rect.height / mapOriginalHeight + 'px';
             });
 
             // Map click handler
@@ -208,8 +211,8 @@
                 mapImg.parentElement.appendChild(newMarker);
 
                 // Set value into dashboard
-                xInput.value = 12848 * x / mapImg.width;
-                yInput.value = 9636 * y / mapImg.height;
+                xInput.value = mapOriginalWidth * x / mapImg.width;
+                yInput.value = mapOriginalHeight * y / mapImg.height;
             });
         });
     </script>
