@@ -1,245 +1,41 @@
 {# templates/admin/map_object/park_map/edit_map_form.html.twig #}
-{% extends '@EasyAdmin/crud/edit.html.twig' %}
+{% extends 'admin/map_object/base_form.html.twig' %}
 
-{% block head_stylesheets %}
-    {{ parent() }}
-    <style>
-        .custom-map-container {
-            margin: 20px 0;
-            position: relative;
-        }
-        .custom-map-img {
-            max-width: 100%;
-            border: 1px solid #ddd;
-        }
-        .map-marker {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-        }
-        .existing-marker {
-            background-color: #4285F4;
-            border: 2px solid white;
-        }
-        .new-marker {
-            background-color: #EA4335;
-            animation: pulse 1.5s infinite;
-        }
-        .map-tooltip {
-            position: absolute;
-            bottom: calc(100% + 5px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            z-index: 1000;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .map-marker:hover .map-tooltip {
-            opacity: 1;
-        }
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-        .map-legend {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 1000;
-            background: rgba(255, 253, 250, 0.95);
-            padding: 12px 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
-            font-size: 14px;
-            border: 1px solid #e0d8c0;
-            max-width: 200px;
-            backdrop-filter: blur(2px);
-        }
-
-        .legend-title {
-            font-weight: 700;
-            color: #3a3a3a;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0d8c0;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .legend-title i {
-            margin-right: 8px;
-            color: #5c5c5c;
-        }
-
-        .legend-items {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            margin-right: 10px;
-            border: 2px solid white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            flex-shrink: 0;
-        }
-
-        .legend-label {
-            color: #3a3a3a;
-            font-weight: 500;
-            font-size: 13.5px;
-            line-height: 1.4;
-        }
-
-        .map-tab .custom-map-container {
-            display: none;
-        }
-    </style>
-{% endblock %}
+{% set map_markers_colors = {
+    'default': '#4285F4',
+    'you_here': '#22c55e',
+    'new': '#ea4335',
+    'current': '#e37400',
+} %}
 
 {% block body_javascript %}
+    {% set legend_title = 'Легенда' %}
+
+    {% set legend = [
+        { color: map_markers_colors['default'], label: 'Существующие объекты' },
+        { color: map_markers_colors['you_here'], label: 'Вы находитесь здесь'},
+        { color: map_markers_colors['new'], label: 'Новый объект'},
+        { color: map_markers_colors['current'], label: 'Текущий объект'}
+    ] %}
+
     {{ parent() }}
-    <script>
-        const mapOriginalWidth = 1280;
-        const mapOriginalHeight = 720;
-
-        const mapPointsColors = {
-            'you_here': '#22c55e',
-            'new': '#ea4335',
-            'current': '#e37400',
-            'default': '#4285F4'
-        };
-
-        // Configures map.
-        // Map is invisible in "Данные об объекте" tab.
-        // Map is visible in "Отметка на карте" tab.
-        const configureMapContainer = (mapContainer) => {
-            mapContainer.style.visibility = 'hidden';
-            document.getElementById('tablist-tab-dannye-ob-obekte').addEventListener('click', function () {
-                mapContainer.style.visibility = 'hidden';
-            });
-
-            document.getElementById('tablist-tab-otmetka-na-karte').addEventListener('click', function () {
-                mapContainer.style.visibility = 'visible';
-            });
-        };
-
-        // Creates legend DOMElement with legendTitle and legendItems.
-        const createLegend = () => {
-            const legendTitle = 'Легенда';
-            const legendItems = [
-                { color: mapPointsColors.default, label: 'Существующие объекты' },
-                { color: mapPointsColors.you_here, label: 'Вы находитесь здесь' },
-                { color: mapPointsColors.current, label: 'Текущий объект' },
-                { color: mapPointsColors.new, label: 'Новый объект' }
-            ];
-
-            const legend = document.createElement('div');
-
-            let legendHTML = '<div class="legend-title"><strong>' + legendTitle + '</strong></div>';
-            legendItems.forEach(item => {
-                legendHTML += `
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: ${item.color}"></div>
-                        <div class="legend-label">${item.label}</div>
-                    </div>
-                `;
-            });
-
-            legend.className = 'map-legend';
-            legend.innerHTML = legendHTML;
-            return legend;
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const mapContainer = document.querySelector('.custom-map-container');
-            const mapImg = document.querySelector('.custom-map-img');
-            const xInput = document.querySelector('#MapObject_x');
-            const yInput = document.querySelector('#MapObject_y');
-            let newMarker = null;
-
-            configureMapContainer(mapContainer);
-            const legend = createLegend();
-            document.querySelector('.custom-map-container').appendChild(legend);
-
-            // Initializing existing markers
-            document.querySelectorAll('.existing-marker').forEach(marker => {
-                const rect = mapContainer.getBoundingClientRect();
-                marker.style.transform = `translate(-50%, -50%) scale(1)`;
-                const x = marker.style.left.split('p')[0];
-                const y = marker.style.top.split('p')[0];
-                marker.style.left = x * rect.width / mapOriginalWidth + 'px';
-                marker.style.top = y * rect.height / mapOriginalHeight + 'px';
-            });
-
-            // Map click handler
-            mapImg.addEventListener('click', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = (e.clientX - rect.left);
-                const y = (e.clientY - rect.top);
-
-                // Remove last new marker
-                if (newMarker) {
-                    newMarker.remove();
-                }
-
-                // Create new marker
-                newMarker = document.createElement('div');
-                newMarker.className = 'map-marker new-marker';
-                newMarker.style.left = x + 'px';
-                newMarker.style.top = y + 'px';
-                newMarker.style.transform = `translate(-50%, -50%) scale(1)`;
-                mapContainer.appendChild(newMarker);
-
-                // Set value into dashboard
-                xInput.value = mapOriginalWidth * x / mapImg.width;
-                yInput.value = mapOriginalHeight * y / mapImg.height;
-            });
-        });
-    </script>
 {% endblock %}
 
 {% block main %}
+    {% set map_image_path = 'images/map_park.jpg' %}
+
+    {% set disable_parent_map = true %}
+
     {{ parent() }}
 
-    {% macro get_marker_style(objectType, is_current) %}
-        {% set colors = {
-                'you_here': '#22c55e',
-                'current': '#e37400',
-                'default': '#4285F4'
-            }
-        %}
-        {{ is_current ? colors.current : (objectType == 'you here' ? colors.you_here : colors.default) }}
-    {% endmacro %}
-
     <div class="custom-map-container">
-        <img id="map" src="{{ asset('images/map_park.jpg') }}" class="custom-map-img" alt="Custom Map">
+        <img id="map" src="{{ asset(map_image_path) }}" class="custom-map-img" alt="Custom Map">
 
         {% for point in app.request.get('all_points') ?? [] %}
             <div class="map-marker existing-marker"
                  style="left: {{ point.x }}px;
                          top: {{ point.y }}px;
-                         background-color: {{ _self.get_marker_style(point.objectType, point.id == entity.instance.id) }}">
+                         background-color: {{ _self.get_marker_style(point.objectType, map_markers_colors, point.id == entity.instance.id, map_markers_colors) }}">
                 <div class="map-tooltip">{{ point.name }}</div>
             </div>
         {% endfor %}
