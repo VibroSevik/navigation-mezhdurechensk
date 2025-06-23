@@ -8,6 +8,9 @@ use App\Entity\Resource\MapTypes;
 use App\Repository\MapObjectRepository;
 use App\Service\YandexUrlParser;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -15,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -53,6 +57,8 @@ class MapObjectCityCrudController extends AbstractCrudController
         $allPoints = $this->mapObjectRepository
                      ->createQueryBuilder('p')
                      ->select('p.id, p.name, p.x, p.y, p.objectType')
+                     ->where('p.mapType = :mapType')
+                     ->setParameter('mapType', MapTypes::CITY)
                      ->getQuery()
                      ->getResult();
         $this->getContext()->getRequest()->attributes->set('all_points', $allPoints);
@@ -102,6 +108,20 @@ class MapObjectCityCrudController extends AbstractCrudController
         $entityInstance->setLatitude($latitude);
         $entityInstance->setLongitude($longitude);
         parent::persistEntity($entityManager, $entityInstance);
+    }
+
+    public function createIndexQueryBuilder(
+        SearchDto $searchDto,
+        EntityDto $entityDto,
+        FieldCollection $fields,
+        FilterCollection $filters
+    ): QueryBuilder
+    {
+        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        $queryBuilder
+            ->andWhere('entity.mapType = :mapType')
+            ->setParameter('mapType', MapTypes::CITY);
+        return $queryBuilder;
     }
 
     public function configureFields(string $pageName): iterable
