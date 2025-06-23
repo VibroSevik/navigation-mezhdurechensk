@@ -22,7 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class MapObjectCrudController extends AbstractCrudController
+class MapObjectCityCrudController extends AbstractCrudController
 {
     public function __construct(
         private readonly YandexUrlParser $yandexUrlParser,
