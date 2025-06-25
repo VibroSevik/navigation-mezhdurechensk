@@ -179,6 +179,10 @@ class MapObject
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\Column]
+    #[Groups('mapObject:read')]
+    private ?string $mapType = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -363,6 +367,18 @@ class MapObject
         if (null !== $imageFile) {
             $this->updatedAt = new DateTime();
         }
+
+        return $this;
+    }
+
+    public function getMapType(): ?string
+    {
+        return $this->mapType;
+    }
+
+    public function setMapType(?string $mapType): static
+    {
+        $this->mapType = $mapType;
 
         return $this;
     }

@@ -1,5 +1,5 @@
-{# templates/admin/map_object/edit_map_form.html.twig #}
-{% extends '@EasyAdmin/crud/edit.html.twig' %}
+{# templates/admin/map_object/base_form.html.twig #}
+{% extends 'admin/field/action.html.twig' %}
 
 {% block head_stylesheets %}
     {{ parent() }}
@@ -117,15 +117,26 @@
     </style>
 {% endblock %}
 
+{% set map_markers_colors = map_marker_colors ?? {
+    'you_here': '#22c55e',
+    'new': '#ea4335',
+    'current': '#e37400',
+    'default': '#4285F4'
+} %}
+
 {% block body_javascript %}
     {{ parent() }}
+
+    {% set legend_title = legend_title ?? 'Легенда' %}
+
+    {% set legend = legend ?? [
+        { color: map_markers_colors['default'], label: 'Существующие объекты' },
+        { color: map_markers_colors['you_here'], label: 'Вы находитесь здесь'},
+        { color: map_markers_colors['new'], label: 'Новый объект'}
+    ] %}
+
     <script>
-        const mapPointsColors = {
-            'you_here': '#22c55e',
-            'new': '#ea4335',
-            'current': '#e37400',
-            'default': '#4285F4'
-        };
+        const mapPointsColors = {{ map_markers_colors | json_encode | raw }}
 
         // Configures map.
         // Map is invisible in "Данные об объекте" tab.
@@ -143,17 +154,10 @@
 
         // Creates legend DOMElement with legendTitle and legendItems.
         const createLegend = () => {
-            const legendTitle = 'Легенда';
-            const legendItems = [
-                { color: mapPointsColors.default, label: 'Существующие объекты' },
-                { color: mapPointsColors.you_here, label: 'Вы находитесь здесь' },
-                { color: mapPointsColors.current, label: 'Текущий объект' },
-                { color: mapPointsColors.new, label: 'Новый объект' }
-            ];
-
+            const legendItems = {{ legend | json_encode | raw }}
             const legend = document.createElement('div');
 
-            let legendHTML = '<div class="legend-title"><strong>' + legendTitle + '</strong></div>';
+            let legendHTML = '<div class="legend-title"><strong>' + {{ legend_title | json_encode | raw }} + '</strong></div>';
             legendItems.forEach(item => {
                 legendHTML += `
                     <div class="legend-item">
@@ -185,15 +189,15 @@
                 marker.style.transform = `translate(-50%, -50%) scale(1)`;
                 const x = marker.style.left.split('p')[0];
                 const y = marker.style.top.split('p')[0];
-                marker.style.left = x * rect.width / 12848 + 'px';
-                marker.style.top = y * rect.height / 9636 + 'px';
+                marker.style.left = (x * rect.width / {{ map_width }}) + 'px';
+                marker.style.top = (y * rect.height / {{ map_height }}) + 'px';
             });
 
             // Map click handler
             mapImg.addEventListener('click', function(e) {
                 const rect = this.getBoundingClientRect();
-                const x = (e.clientX - rect.left);
-                const y = (e.clientY - rect.top);
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
 
                 // Remove last new marker
                 if (newMarker) {
@@ -205,12 +209,11 @@
                 newMarker.className = 'map-marker new-marker';
                 newMarker.style.left = x + 'px';
                 newMarker.style.top = y + 'px';
-                newMarker.style.transform = `translate(-50%, -50%) scale(1)`;
-                mapContainer.appendChild(newMarker);
+                mapImg.parentElement.appendChild(newMarker);
 
                 // Set value into dashboard
-                xInput.value = 12848 * x / mapImg.width;
-                yInput.value = 9636 * y / mapImg.height;
+                xInput.value = ({{ map_width }}) * x / mapImg.width;
+                yInput.value = ({{ map_height }}) * y / mapImg.height;
             });
         });
     </script>
@@ -219,26 +222,30 @@
 {% block main %}
     {{ parent() }}
 
-    {% macro get_marker_style(objectType, is_current) %}
-        {% set colors = {
-                'you_here': '#22c55e',
-                'current': '#e37400',
-                'default': '#4285F4'
-            }
-        %}
-        {{ is_current ? colors.current : (objectType == 'you here' ? colors.you_here : colors.default) }}
-    {% endmacro %}
+    {{ block('map_container') }}
+{% endblock %}
 
-    <div class="custom-map-container">
-        <img id="map" src="{{ asset('images/map.svg') }}" class="custom-map-img" alt="Custom Map">
+{% block map_container %}
+    {% set map_image_path = map_image_path ?? '' %}
 
-        {% for point in app.request.get('all_points') ?? [] %}
-            <div class="map-marker existing-marker"
-                 style="left: {{ point.x }}px;
-                         top: {{ point.y }}px;
-                         background-color: {{ _self.get_marker_style(point.objectType, point.id == entity.instance.id) }}">
-                <div class="map-tooltip">{{ point.name }}</div>
-            </div>
-        {% endfor %}
-    </div>
+    {% set disable_parent_map = disable_parent_map ?? false %}
+
+    {% if not disable_parent_map %}
+        {% macro get_marker_style(objectType, colors, is_current = false) %}
+            {{ is_current ? colors.current : (objectType == 'you here' ? colors.you_here : colors.default) }}
+        {% endmacro %}
+
+        <div class="custom-map-container">
+            <img src="{{ asset(map_image_path) }}" class="custom-map-img" alt="Custom Map">
+
+            {% for point in app.request.get('all_points') ?? [] %}
+                <div class="map-marker existing-marker"
+                     style="left: {{ point.x }}px;
+                             top: {{ point.y }}px;
+                             background-color: {{ _self.get_marker_style(point.objectType, map_markers_colors) }}">
+                    <div class="map-tooltip">{{ point.name }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}

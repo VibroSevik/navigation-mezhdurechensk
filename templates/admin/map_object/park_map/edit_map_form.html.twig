@@ -1,0 +1,46 @@
+{# templates/admin/map_object/park_map/edit_map_form.html.twig #}
+{% extends 'admin/map_object/base_form.html.twig' %}
+
+{% set map_markers_colors = {
+    'default': '#4285F4',
+    'you_here': '#22c55e',
+    'new': '#ea4335',
+    'current': '#e37400',
+} %}
+
+{% block body_javascript %}
+    {% set legend_title = 'Легенда' %}
+
+    {% set legend = [
+        { color: map_markers_colors['default'], label: 'Существующие объекты' },
+        { color: map_markers_colors['you_here'], label: 'Вы находитесь здесь'},
+        { color: map_markers_colors['new'], label: 'Новый объект'},
+        { color: map_markers_colors['current'], label: 'Текущий объект'}
+    ] %}
+
+    {% set map_width = 6827 %}
+    {% set map_height = 3840 %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+    {% set map_image_path = 'images/map_park.jpg' %}
+
+    {% set disable_parent_map = true %}
+
+    {{ parent() }}
+
+    <div class="custom-map-container">
+        <img id="map" src="{{ asset(map_image_path) }}" class="custom-map-img" alt="Custom Map">
+
+        {% for point in app.request.get('all_points') ?? [] %}
+            <div class="map-marker existing-marker"
+                 style="left: {{ point.x }}px;
+                         top: {{ point.y }}px;
+                         background-color: {{ _self.get_marker_style(point.objectType, map_markers_colors, point.id == entity.instance.id, map_markers_colors) }}">
+                <div class="map-tooltip">{{ point.name }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

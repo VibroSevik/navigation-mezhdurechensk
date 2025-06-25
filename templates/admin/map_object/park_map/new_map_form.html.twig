@@ -1,0 +1,28 @@
+{# templates/admin/map_object/park_map/new_map_form.html.twig #}
+{% extends 'admin/map_object/base_form.html.twig' %}
+
+{% set map_markers_colors = {
+    'default': '#4285F4',
+    'you_here': '#22c55e',
+    'new': '#ea4335',
+} %}
+
+{% block body_javascript %}
+    {% set legend_title = 'Легенда' %}
+
+    {% set legend = [
+        { color: map_markers_colors['default'], label: 'Существующие объекты' },
+        { color: map_markers_colors['you_here'], label: 'Вы находитесь здесь'},
+        { color: map_markers_colors['new'], label: 'Новый объект'}
+    ] %}
+
+    {% set map_width = 6827 %}
+    {% set map_height = 3840 %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+    {% set map_image_path = 'images/map_park.jpg' %}
+    {{ parent() }}
+{% endblock %}

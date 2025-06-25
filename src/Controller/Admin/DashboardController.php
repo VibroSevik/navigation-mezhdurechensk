@@ -31,29 +31,38 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('
-                <span>Админ-панель</span>
-            ')
-            ->setFaviconPath('favicon.ico')
-            ->renderContentMaximized()
-            ->generateRelativeUrls();
+                     ->setTitle('
+                         <span>Админ-панель</span>
+                     ')
+                     ->setFaviconPath('favicon.ico')
+                     ->renderContentMaximized()
+                     ->generateRelativeUrls();
     }
 
     public function configureMenuItems(): iterable
     {
         yield MenuItem::section('Навигация');
-        yield MenuItem::linkToCrud('Объекты на карте', 'fa-solid fa-map-location-dot', MapObject::class)
-            ->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::linkToCrud('Карта города', 'fa-solid fa-map-location-dot', MapObject::class)
+                     ->setController(MapObjectCityCrudController::class)
+                     ->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::linkToCrud('Карта парка Мегалиты', 'fa-solid fa-map-location-dot', MapObject::class)
+                     ->setController(MapObjectParkCrudController::class)
+                     ->setPermission('ROLE_ADMIN');
+
         yield MenuItem::linkToCrud('Новости и события', 'fa-solid fa-newspaper', Event::class)
-            ->setPermission('ROLE_ADMIN');
+                     ->setPermission('ROLE_ADMIN');
+
         yield MenuItem::linkToCrud('Медиа главного меню', 'fa-solid fa-photo-film', MainWindow::class)
-            ->setPermission('ROLE_ADMIN');
+                     ->setPermission('ROLE_ADMIN');
 
         yield MenuItem::section('Настройки');
-        yield MenuItem::linkToCrud('Пользователи', 'fas fa-user-gear', User::class)
-            ->setPermission('ROLE_ADMIN');
-        yield MenuItem::linkToUrl('API', 'fa fa-link', '/api')->setLinkTarget('_blank')
-            ->setPermission('ROLE_ADMIN');
 
+        yield MenuItem::linkToCrud('Пользователи', 'fas fa-user-gear', User::class)
+                     ->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::linkToUrl('API', 'fa fa-link', '/api')->setLinkTarget('_blank')
+                     ->setPermission('ROLE_ADMIN');
     }
 }
