@@ -17,7 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class MapObjectParkCrudController extends AbstractMapObjectCrudController
+class MapObjectShoriaMountainsCrudController extends AbstractMapObjectCrudController
 {
     public function __construct(
         private readonly YandexUrlParser $yandexUrlParser,
@@ -40,7 +40,7 @@ class MapObjectParkCrudController extends AbstractMapObjectCrudController
                      ->createQueryBuilder('p')
                      ->select('p.id, p.name, p.x, p.y, p.objectType')
                      ->where('p.mapType = :mapType')
-                     ->setParameter('mapType', MapTypes::PARK)
+                     ->setParameter('mapType', MapTypes::SHORIA)
                      ->getQuery()
                      ->getResult();
         $this->getContext()->getRequest()->attributes->set('all_points', $allPoints);
@@ -63,7 +63,7 @@ class MapObjectParkCrudController extends AbstractMapObjectCrudController
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         /** @var MapObject $entityInstance */
-        $entityInstance->setMapType(MapTypes::PARK->value);
+        $entityInstance->setMapType(MapTypes::SHORIA->value);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -77,7 +77,7 @@ class MapObjectParkCrudController extends AbstractMapObjectCrudController
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         $queryBuilder
             ->andWhere('entity.mapType = :mapType')
-            ->setParameter('mapType', MapTypes::PARK);
+            ->setParameter('mapType', MapTypes::SHORIA);
         return $queryBuilder;
     }
 }
