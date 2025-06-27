@@ -30,8 +30,8 @@ class MapObjectShoriaMountainsCrudController extends AbstractMapObjectCrudContro
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-                     ->overrideTemplate('crud/new', 'admin/map_object/park_map/new_map_form.html.twig')
-                     ->overrideTemplate('crud/edit', 'admin/map_object/park_map/edit_map_form.html.twig');
+                     ->overrideTemplate('crud/new', 'admin/map_object/shoria_mountains_map/new_map_form.html.twig')
+                     ->overrideTemplate('crud/edit', 'admin/map_object/shoria_mountains_map/edit_map_form.html.twig');
     }
 
     private function addPointsToRequest(): void
