@@ -40,7 +40,7 @@ class MapObjectShoriaMountainsCrudController extends AbstractMapObjectCrudContro
                      ->createQueryBuilder('p')
                      ->select('p.id, p.name, p.x, p.y, p.objectType')
                      ->where('p.mapType = :mapType')
-                     ->setParameter('mapType', MapTypes::SHORIA)
+                     ->setParameter('mapType', MapTypes::SHORIA_MOUNTAINS)
                      ->getQuery()
                      ->getResult();
         $this->getContext()->getRequest()->attributes->set('all_points', $allPoints);
@@ -63,7 +63,7 @@ class MapObjectShoriaMountainsCrudController extends AbstractMapObjectCrudContro
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         /** @var MapObject $entityInstance */
-        $entityInstance->setMapType(MapTypes::SHORIA->value);
+        $entityInstance->setMapType(MapTypes::SHORIA_MOUNTAINS->value);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -77,7 +77,7 @@ class MapObjectShoriaMountainsCrudController extends AbstractMapObjectCrudContro
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         $queryBuilder
             ->andWhere('entity.mapType = :mapType')
-            ->setParameter('mapType', MapTypes::SHORIA);
+            ->setParameter('mapType', MapTypes::SHORIA_MOUNTAINS);
         return $queryBuilder;
     }
 }
