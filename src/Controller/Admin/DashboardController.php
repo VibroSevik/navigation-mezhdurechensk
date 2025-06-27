@@ -47,8 +47,12 @@ class DashboardController extends AbstractDashboardController
                      ->setController(MapObjectCityCrudController::class)
                      ->setPermission('ROLE_ADMIN');
 
-        yield MenuItem::linkToCrud('Карта парка Мегалиты', 'fa-solid fa-map-location-dot', MapObject::class)
-                     ->setController(MapObjectParkCrudController::class)
+        yield MenuItem::linkToCrud('Карта Шория', 'fa-solid fa-map-location-dot', MapObject::class)
+                     ->setController(MapObjectShoriaMountainsCrudController::class)
+                     ->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::linkToCrud('Карта Зубья', 'fa-solid fa-map-location-dot', MapObject::class)
+                     ->setController(MapObjectZybiaMountainsCrudController::class)
                      ->setPermission('ROLE_ADMIN');
 
         yield MenuItem::linkToCrud('Новости и события', 'fa-solid fa-newspaper', Event::class)

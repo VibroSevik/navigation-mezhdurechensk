@@ -17,7 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class MapObjectParkCrudController extends AbstractMapObjectCrudController
+class MapObjectZybiaMountainsCrudController extends AbstractMapObjectCrudController
 {
     public function __construct(
         private readonly YandexUrlParser $yandexUrlParser,
@@ -30,19 +30,19 @@ class MapObjectParkCrudController extends AbstractMapObjectCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-                     ->overrideTemplate('crud/new', 'admin/map_object/park_map/new_map_form.html.twig')
-                     ->overrideTemplate('crud/edit', 'admin/map_object/park_map/edit_map_form.html.twig');
+                     ->overrideTemplate('crud/new', 'admin/map_object/zybia_mountains_map/new_map_form.html.twig')
+                     ->overrideTemplate('crud/edit', 'admin/map_object/zybia_mountains_map/edit_map_form.html.twig');
     }
 
     private function addPointsToRequest(): void
     {
         $allPoints = $this->mapObjectRepository
-                     ->createQueryBuilder('p')
-                     ->select('p.id, p.name, p.x, p.y, p.objectType')
-                     ->where('p.mapType = :mapType')
-                     ->setParameter('mapType', MapTypes::PARK)
-                     ->getQuery()
-                     ->getResult();
+                          ->createQueryBuilder('p')
+                          ->select('p.id, p.name, p.x, p.y, p.objectType')
+                          ->where('p.mapType = :mapType')
+                          ->setParameter('mapType', MapTypes::ZYBIA_MOUNTAINS)
+                          ->getQuery()
+                          ->getResult();
         $this->getContext()->getRequest()->attributes->set('all_points', $allPoints);
     }
 
@@ -63,7 +63,7 @@ class MapObjectParkCrudController extends AbstractMapObjectCrudController
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         /** @var MapObject $entityInstance */
-        $entityInstance->setMapType(MapTypes::PARK->value);
+        $entityInstance->setMapType(MapTypes::ZYBIA_MOUNTAINS->value);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -77,7 +77,7 @@ class MapObjectParkCrudController extends AbstractMapObjectCrudController
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         $queryBuilder
             ->andWhere('entity.mapType = :mapType')
-            ->setParameter('mapType', MapTypes::PARK);
+            ->setParameter('mapType', MapTypes::ZYBIA_MOUNTAINS);
         return $queryBuilder;
     }
 }
