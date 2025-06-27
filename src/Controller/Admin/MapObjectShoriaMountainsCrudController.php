@@ -37,12 +37,12 @@ class MapObjectShoriaMountainsCrudController extends AbstractMapObjectCrudContro
     private function addPointsToRequest(): void
     {
         $allPoints = $this->mapObjectRepository
-                     ->createQueryBuilder('p')
-                     ->select('p.id, p.name, p.x, p.y, p.objectType')
-                     ->where('p.mapType = :mapType')
-                     ->setParameter('mapType', MapTypes::SHORIA_MOUNTAINS)
-                     ->getQuery()
-                     ->getResult();
+                          ->createQueryBuilder('p')
+                          ->select('p.id, p.name, p.x, p.y, p.objectType')
+                          ->where('p.mapType = :mapType')
+                          ->setParameter('mapType', MapTypes::SHORIA_MOUNTAINS)
+                          ->getQuery()
+                          ->getResult();
         $this->getContext()->getRequest()->attributes->set('all_points', $allPoints);
     }
 
