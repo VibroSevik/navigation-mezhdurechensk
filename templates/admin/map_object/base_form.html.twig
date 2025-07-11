@@ -189,8 +189,8 @@
                 marker.style.transform = `translate(-50%, -50%) scale(1)`;
                 const x = marker.style.left.split('p')[0];
                 const y = marker.style.top.split('p')[0];
-                marker.style.left = (x * rect.width / {{ map_width }}) + 'px';
-                marker.style.top = (y * rect.height / {{ map_height }}) + 'px';
+                marker.style.left = (x * mapImg.width / {{ map_width }}) + 'px';
+                marker.style.top = (y * mapImg.height / {{ map_height }}) + 'px';
             });
 
             // Map click handler
