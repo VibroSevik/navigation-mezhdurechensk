@@ -8,7 +8,7 @@ class BuildRequest
 {
     public function __construct(
         #[Assert\NotBlank]
-        public int $destinationPoint,
+        public int $destinationId,
     )
     {}
 }

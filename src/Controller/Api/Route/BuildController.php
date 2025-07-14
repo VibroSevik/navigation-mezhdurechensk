@@ -25,7 +25,7 @@ class BuildController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $destinationPoint = $this->mapObjectRepository->findOneBy(['id' => $request->destinationPoint]);
+        $destinationPoint = $this->mapObjectRepository->findOneBy(['id' => $request->destinationId]);
         if (!$destinationPoint) {
             throw new NotFoundHttpException('Destination point not found');
         }
