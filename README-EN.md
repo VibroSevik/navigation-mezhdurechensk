@@ -1,4 +1,4 @@
-## Navigation for the Mezhdurechensk city
+# Navigation for the Mezhdurechensk city
 
 > [!NOTE]
 > Russian documentation can be found [here](https://github.com/VibroSevik/api.mezhdurechensk.itlabs.top/blob/master/README.md "Russian documentation").
