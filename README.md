@@ -1,4 +1,4 @@
-## Навигация для города Междуреченск
+# Навигация для города Междуреченск
 
 > [!NOTE]
 > English documentation can be found [here](https://github.com/VibroSevik/api.mezhdurechensk.itlabs.top/blob/master/README-EN.md "English documentation").
