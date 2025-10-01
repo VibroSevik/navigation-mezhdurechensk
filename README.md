@@ -4,7 +4,7 @@
 > English documentation can be found [here](https://github.com/VibroSevik/api.mezhdurechensk.itlabs.top/blob/master/README-EN.md "English documentation").
 
 > [!IMPORTANT]  
-> ext-imagick with ImageMagick must be installed on the system.
+> В системе должен быть установлен ext-imagick с ImageMagick.
 
 - перейти с .env на .env.local
 - изменить DATABASE_URL
