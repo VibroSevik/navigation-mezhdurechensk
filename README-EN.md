@@ -3,6 +3,9 @@
 > [!NOTE]
 > Russian documentation can be found [here](https://github.com/VibroSevik/api.mezhdurechensk.itlabs.top/blob/master/README.md "Russian documentation").
 
+> [!IMPORTANT]  
+> В системе должен быть установлен ext-imagick с ImageMagick.
+
 - rebase .env to .env.local
 - change DATABASE_URL
 
