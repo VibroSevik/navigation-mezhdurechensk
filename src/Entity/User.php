@@ -12,10 +12,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const array ROLES = [
-        'Администратор' => 'ROLE_ADMIN',
-    ];
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

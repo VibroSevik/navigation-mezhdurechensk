@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Resource\UserRoles;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +26,7 @@ class SecurityController extends AbstractController
         if (!$userAdmin) {
             $userAdmin = (new User())
                 ->setUsername('admin')
-                ->setRoles(array_values(User::ROLES))
+                ->setRoles(UserRoles::ALL)
                 ->setPassword('$2y$13$dKHroammGwy5m..V51QWzeoMwdltwX.sn2kU.xwa1Z52wrZ4qAqya');
             $entityManager->persist($userAdmin);
             $entityManager->flush();
