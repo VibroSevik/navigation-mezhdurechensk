@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Admin\Field\VichImageField;
 use App\Entity\MapObject;
+use App\Entity\Resource\MapObjectTypes;
 use App\Service\YandexUrlParser;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -107,7 +108,7 @@ class AbstractMapObjectCrudController extends AbstractCrudController
         yield FormField::addTab('Отметка на карте');
 
         yield ChoiceField::new('objectType', 'Тип объекта')
-                     ->setChoices(array_flip(MapObject::TYPES))
+                     ->setChoices(MapObjectTypes::EASY_ADMIN_TYPES)
                      ->setColumns(6);
 
         yield FormField::addRow();
@@ -149,7 +150,6 @@ class AbstractMapObjectCrudController extends AbstractCrudController
                      ')
                      ->onlyOnForms()
                      ->setFormTypeOption('allow_delete', true)
-                     ->setRequired(true)
                      ->setColumns(2);
 
         if (Crud::PAGE_EDIT == $pageName) {

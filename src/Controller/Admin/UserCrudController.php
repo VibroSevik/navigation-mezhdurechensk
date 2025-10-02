@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Resource\UserRoles;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -92,6 +93,6 @@ class UserCrudController extends AbstractCrudController
             ->setRequired(true)
             ->allowMultipleChoices()
             ->renderExpanded()
-            ->setChoices(User::ROLES);
+            ->setChoices(UserRoles::EASY_ADMIN_ROLES);
     }
 }
