@@ -111,6 +111,7 @@ class MapObject
 {
     use CreatedAtTrait;
     use UpdatedAtTrait;
+
     public const array TYPES = [
         MapObjectTypes::YOU_HERE->value => 'Вы здесь',
         MapObjectTypes::HOTEL->value => 'Гостиницы и отели',
@@ -129,35 +130,36 @@ class MapObject
     #[Groups('mapObject:read')]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups('mapObject:read')]
     private ?string $title = null;
 
     #[ORM\Column(length: 4096)]
+    #[Assert\NotBlank]
     #[Groups('mapObject:read')]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups('mapObject:read')]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups('mapObject:read')]
     private ?string $address = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups('mapObject:read')]
     private ?string $email = null;
 
-    #[ORM\Column(length: 1024)]
+    #[ORM\Column(length: 1024, nullable: true)]
     #[Groups('mapObject:read')]
     private ?string $openingHours = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups('mapObject:read')]
     private ?string $objectType = null;
 
-    #[ORM\Column(length: 512)]
+    #[ORM\Column(length: 512, nullable: true)]
     private ?string $mapUrl = null;
 
     #[ORM\Column(nullable: true)]
@@ -166,10 +168,10 @@ class MapObject
     #[ORM\Column(nullable: true)]
     private ?string $latitude = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $x = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $y = null;
 
     #[Vich\UploadableField(mapping: 'map_object_images', fileNameProperty: 'image')]
