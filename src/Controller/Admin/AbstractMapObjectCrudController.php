@@ -149,7 +149,6 @@ class AbstractMapObjectCrudController extends AbstractCrudController
                      ')
                      ->onlyOnForms()
                      ->setFormTypeOption('allow_delete', true)
-                     ->setRequired(true)
                      ->setColumns(2);
 
         if (Crud::PAGE_EDIT == $pageName) {
