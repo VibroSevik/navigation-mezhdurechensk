@@ -112,14 +112,6 @@ class MapObject
     use CreatedAtTrait;
     use UpdatedAtTrait;
 
-    public const array TYPES = [
-        MapObjectTypes::YOU_HERE->value => 'Вы здесь',
-        MapObjectTypes::HOTEL->value => 'Гостиницы и отели',
-        MapObjectTypes::RESTAURANT->value => 'Рестораны и места общения',
-        MapObjectTypes::SIGHT->value => 'Достопримечательности',
-        MapObjectTypes::PROJECT->value => 'Проекты',
-    ];
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
