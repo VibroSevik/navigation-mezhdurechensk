@@ -30,6 +30,14 @@ class BuildController extends AbstractController
             throw new NotFoundHttpException('Destination point not found');
         }
 
+        if (!$destinationPoint->getLatitude()) {
+            throw new NotFoundHttpException('Destination point latitude is null');
+        }
+
+        if (!$destinationPoint->getLongitude()) {
+            throw new NotFoundHttpException('Destination point longitude is null');
+        }
+
         [$x0, $y0] = ['53.697395', '88.034651'];
         [$x1, $y1] = [$destinationPoint->getLatitude(), $destinationPoint->getLongitude()];
         $url = 'https://yandex.ru/maps/?rtext=' . $x0 . ',' . $y0 . '~' . $x1 . ',' . $y1;
