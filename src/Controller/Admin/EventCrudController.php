@@ -6,6 +6,7 @@ use App\Controller\Admin\Field\VichImageField;
 use App\Entity\Event;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -21,6 +22,11 @@ class EventCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Event::class;
+    }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        return $assets->addJsFile('/js/event-image-dimensions.js');
     }
 
     public function configureCrud(Crud $crud): Crud
