@@ -127,12 +127,14 @@ class AbstractMapObjectCrudController extends AbstractCrudController
 
         yield FormField::addRow();
 
-        yield TextField::new('x', 'Координата X (только для чтения)')
+        // hidden element (he used on /templates/admin/map_object/base_form.html.twig)
+        yield TextField::new('x', '')
                      ->setFormTypeOption('attr', ['readonly' => true])
                      ->onlyOnForms()
                      ->setColumns(3);
 
-        yield TextField::new('y', 'Координата Y (только для чтения)')
+        // hidden element (he used on /templates/admin/map_object/base_form.html.twig)
+        yield TextField::new('y', '')
                      ->setFormTypeOption('attr', ['readonly' => true])
                      ->onlyOnForms()
                      ->setColumns(3);
