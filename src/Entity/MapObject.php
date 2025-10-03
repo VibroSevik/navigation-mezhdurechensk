@@ -151,7 +151,7 @@ class MapObject
     #[Groups('mapObject:read')]
     private ?string $objectType = null;
 
-    #[ORM\Column(length: 512, nullable: true)]
+    #[ORM\Column(length: 512)]
     private ?string $mapUrl = null;
 
     #[ORM\Column(nullable: true)]
