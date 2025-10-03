@@ -176,7 +176,10 @@
             const mapContainer = document.querySelector('.custom-map-container');
             const mapImg = document.querySelector('.custom-map-img');
             const xInput = document.querySelector('#MapObject_x');
+            xInput.style.visibility = 'hidden';
             const yInput = document.querySelector('#MapObject_y');
+            yInput.style.visibility = 'hidden';
+
             let newMarker = null;
 
             configureMapContainer(mapContainer);

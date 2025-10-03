@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EventDataRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -15,11 +16,11 @@ class EventData
     #[Groups(['event:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     #[Groups(['event:read'])]
     private ?string $title = null;
 
-    #[ORM\Column(length: 4096)]
+    #[ORM\Column(type: Types::TEXT)]
     #[Groups(['event:read'])]
     private ?string $description = null;
 
